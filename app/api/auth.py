@@ -44,4 +44,6 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         )
     return user
 
-
+@router.post("/validate-token")
+def validate_token(current_user: User = Depends(get_current_user)):
+    return 'Token is valid'
