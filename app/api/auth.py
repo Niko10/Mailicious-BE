@@ -1,4 +1,3 @@
-# app/api/v1/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -45,6 +44,4 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         )
     return user
 
-@router.get("/users/me", response_model=User)
-def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
+
