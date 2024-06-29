@@ -215,7 +215,7 @@ def initial_setup_example():
         
         # create analysis types
         analysis_types = [
-            ("ExternalDataSources", "This email is spam."),
+            ("ExternalDataSources", "This Module interacts with several external data sources to enrich and globalize the detection capabilities"),
         ]
         for name, description in analysis_types:
             analysis_type_response = create_analysis_type(headers, name, description)
