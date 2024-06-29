@@ -10,27 +10,25 @@ Backend for Mailicious Product
 
 ![alt text](image.png)
 
-
-API Calls:
-1. If no user exist yet use this to create your first:
-<br>
+# API Calls
+### If no user exist yet use this to create your first:
 ```
 curl -X 'POST' 'http://127.0.0.1:8000/users/' -H 'accept: application/json' -H 'Content-Type: application/json' -d '{"email": "oriori@example.com","full_name": "ori hadad","is_active": true,"password": "1234"}'
 ```
 
-Then login:
+### Then login:
 ```
 curl -X POST "http://127.0.0.1:8000/token" \
 -H "Content-Type: application/x-www-form-urlencoded" \
 -d "username=oriori@example.com&password=1234"
 ```
 
-You will get something like this:
+You will get something like this as a response
 ```
 {"access_token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvcmlvcmlAZXhhbXBsZS5jb20iLCJleHAiOjE3MTkwNTMxMjR9.eCqVhXT9kU0YUoz7vw1MlxgVnwGHLhI10r0oCLLn8_A","token_type":"bearer"}
 ```
 
-Then use the access token in every request like:
+### Then use the access token in every request like this one:
 
 ```
 curl -X GET "http://127.0.0.1:8000/users/1" \
@@ -43,4 +41,25 @@ And you will get the response:
 ```
 
 
-Easy
+### Easy
+
+<br>
+
+# Even easier? checkout examples/1.py and see 'copy & paste' code to consume the api from your python code
+* It contains 2 functions: 
+    - 'example_1()' - show general usage of some of the apis 
+    - 'initial_setup_example()' - set up initial use of the api and db. It will resulted with this data:
+    ## users table
+    ![alt text](image-1.png)
+
+    ## enum_verdicts table
+    ![alt text](image-2.png)
+
+    ## enum_analysis table
+    ![alt text](image-3.png)
+
+    ## emails table
+    ![alt text](image-4.png)
+
+    ## users table
+    ![alt text](image-5.png)
