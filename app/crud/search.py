@@ -24,3 +24,14 @@ def search_by_verdict(db: Session, verdict_id: int, analysis_id: int):
         and_(Analysis.verdict_id == verdict_id, Analysis.analysis_id == analysis_id)
     )
     return query.order_by(Email.email_datetime.desc()).all()
+
+
+def search_emails_by_text(db: Session, text: str):
+    query = db.query(Email).filter(
+        or_(
+            Email.sender.ilike(f"%{text}%"),
+            Email.receiver.ilike(f"%{text}%"),
+            Email.content.ilike(f"%{text}%")
+        )
+    )
+    return query.order_by(Email.email_datetime.desc()).all()
