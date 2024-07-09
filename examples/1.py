@@ -14,12 +14,17 @@ def create_user(email, password, full_name):
     return response.json()
 
 def login(email, password):
-    url = f"{BASE_URL}/token"
+    url = f"{BASE_URL}/token"  # Ensure the endpoint is correct
     payload = {
         "username": email,
         "password": password
     }
-    response = requests.post(url, data=payload)
+    headers = {
+        "Content-Type": "application/json",
+        "accept": "application/json"
+    }
+    print(f"Login payload: {payload}")
+    response = requests.post(url, json=payload, headers=headers)
     if response.status_code == 200:
         token = response.json().get("access_token")
         headers = {
@@ -27,6 +32,7 @@ def login(email, password):
         }
         return headers
     else:
+        print(f"Login failed: {response.json()}")
         return None
 
 def create_email(headers, sender, receiver, email_datetime, content):
@@ -192,9 +198,9 @@ def example_1():
 
 def initial_setup_example():
     # Create a user
-    DETECTION_SERVER_USER_NAME = "detection_server@mailicious.com"
-    DETECTION_SERVER_USER_PASSWORD = "detection_server_password"
-    DETECTION_SERVER_USER_FULL_NAME = "Detection Server"
+    DETECTION_SERVER_USER_NAME = "test@test.com"
+    DETECTION_SERVER_USER_PASSWORD = "test"
+    DETECTION_SERVER_USER_FULL_NAME = "test"
 
     user_response = create_user(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD, DETECTION_SERVER_USER_FULL_NAME)
     print("Create User Response:", user_response)
@@ -223,12 +229,12 @@ def initial_setup_example():
         
         # create emails for example
         emails = [
-            ("user1@corp.com", "user2@corp.com", "2023-01-01T12:00:00", "This is a test email."),
-            ("user1@corp.com", "user2@corp.com", "2023-01-02T12:00:00", "This is a test email."),
-            ("user2@corp.com", "user1@corp.com", "2023-01-02T12:05:00", "This is a test email."),
-            ("user2@corp.com", "user1@corp.com", "2023-01-02T12:10:00", "This is a test email."),
-            ("user1@corp.com", "user3@corp.com", "2023-01-02T12:11:00", "This is a test email."),
-            ("user3@corp.com", "user1@corp.com", "2023-01-02T12:15:00", "This is a test email."),
+            ("user11@corp.com", "user2@corp.com", "2023-01-01T12:00:00", "This is a test email."),
+            ("user11@corp.com", "user2@corp.com", "2023-01-02T12:00:00", "This is a test email."),
+            ("user22@corp.com", "user1@corp.com", "2023-01-02T12:05:00", "This is a test email."),
+            ("user22@corp.com", "user1@corp.com", "2023-01-02T12:10:00", "This is a test email."),
+            ("user11@corp.com", "user3@corp.com", "2023-01-02T12:11:00", "This is a test email."),
+            ("user33@corp.com", "user1@corp.com", "2023-01-02T12:15:00", "This is a test email."),
         ]
 
         # get all vericts
