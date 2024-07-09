@@ -8,6 +8,15 @@ from app.api.auth import get_current_user
 
 router = APIRouter()
 
+
+@router.get("/me", response_model=User)
+def read_users_me(current_user: User = Depends(get_current_user)):
+    return current_user
+
+@router.get("/me/id")
+def read_users_me_id(current_user: User = Depends(get_current_user)):
+    return {"id": current_user.id}
+
 @router.post("/", response_model=User)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_email(db, email=user.email)
@@ -41,11 +50,4 @@ def delete_user(user_id: int, db: Session = Depends(get_db), current_user: User 
         raise HTTPException(status_code=404, detail="User not found")
     return crud_user.delete_user(db, user_id=user_id)
 
-@router.get("/me", response_model=User)
-def read_users_me(current_user: User = Depends(get_current_user)):
-    return current_user
-
-@router.get("/me/id")
-def read_users_me_id(current_user: User = Depends(get_current_user)):
-    return {"id": current_user.id}
 

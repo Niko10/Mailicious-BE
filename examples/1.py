@@ -138,6 +138,11 @@ def search_emails_by_time_range_and_sender(headers, from_time, to_time, sender):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
+def get_current_user(headers):
+    url = f"{BASE_URL}/users/me"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")
@@ -209,6 +214,10 @@ def initial_setup_example():
     headers = login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
     if headers:
         print("Login successful")
+
+        # get current user
+        current_user = get_current_user(headers)
+        print("Current User:", current_user)
        
         # create verdicts
         verdicts = [
