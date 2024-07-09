@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Search Example</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>API Search Example</h1>
+    <button id="login">Login and Search</button>
+    <div id="results"></div>
+
+    <script>
+        $(document).ready(function() {
+            $('#login').click(function() {
+                // Step 1: Login
+                $.ajax({
+                    url: 'http://127.0.0.1:8000/token',
+                    type: 'POST',
+                    data: {
+                        username: 'detection_server@mailicious.com',
+                        password: 'detection_server_password'
+                    },
+                    success: function(response) {
+                        const token = response.access_token;
+                        console.log('Login successful:', token);
+
+                        // Step 2: Use the search functionality
+                        $.ajax({
+                            url: 'http://127.0.0.1:8000/search/text',
+                            type: 'GET',
+                            headers: {
+                                'Authorization': 'Bearer ' + token
+                            },
+                            data: {
+                                text: 'user'
+                            },
+                            success: function(searchResponse) {
+                                console.log('Search results:', searchResponse);
+                                $('#results').html('<pre>' + JSON.stringify(searchResponse, null, 2) + '</pre>');
+                            },
+                            error: function(error) {
+                                console.error('Search failed:', error);
+                                $('#results').html('<p>Search failed. Check console for details.</p>');
+                            }
+                        });
+                    },
+                    error: function(error) {
+                        console.error('Login failed:', error);
+                        $('#results').html('<p>Login failed. Check console for details.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
