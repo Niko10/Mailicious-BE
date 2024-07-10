@@ -143,6 +143,12 @@ def get_current_user(headers):
     response = requests.get(url, headers=headers)
     return response.json()
 
+def search_advanced(params, headers):
+    url = f"{BASE_URL}/search/advanced"
+    response = requests.get(url, json=params, headers=headers)
+    return response.json()
+
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")
@@ -271,7 +277,34 @@ def initial_setup_example():
     else:
         print("Login failed")
     
+
+def search_examples():
+    
+    # Create a user
+    DETECTION_SERVER_USER_NAME = "poc@test.com"
+    DETECTION_SERVER_USER_PASSWORD = "poc"
+    DETECTION_SERVER_USER_FULL_NAME = "poc"
+
+    user_response = create_user(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD, DETECTION_SERVER_USER_FULL_NAME)
+    print("Create User Response:", user_response)
+
+    # Login and get headers
+    headers = login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    if headers:
+        print("Login successful")
+
+        # Create Email to search:
+        email_response = create_email(headers, "user11@corp.com", "orih@corp.com", "2023-01-01T12:00:00", "This is a mock email.")
+        print("Create Email Response:", email_response)
+
+        # Search emails by sender
+        search_advanced_results = search_advanced({"sender": 'user', "text": "mock"}, headers)
+        print("Search Advanced Results:", search_advanced_results)
+                    
+
 # Example usage
 if __name__ == "__main__":
     # example_1()
-    initial_setup_example()
+    #initial_setup_example()
+    search_examples()
