@@ -1,4 +1,6 @@
 from pydantic import BaseModel
+from app.schemas.enum_analysis import EnumAnalysis
+from app.schemas.enum_verdicts import EnumVerdicts
 
 class AnalysisBase(BaseModel):
     email_id: int
@@ -13,6 +15,8 @@ class AnalysisUpdate(AnalysisBase):
 
 class AnalysisInDBBase(AnalysisBase):
     id: int
+    analysis: EnumAnalysis
+    verdict: EnumVerdicts
 
     class Config:
         orm_mode = True

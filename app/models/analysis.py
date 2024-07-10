@@ -11,5 +11,5 @@ class Analysis(Base):
     verdict_id = Column(Integer, ForeignKey('enum_verdicts.id'))
     
     email = relationship("Email", back_populates="analyses")
-    analysis = relationship("EnumAnalysis")
-    verdict = relationship("EnumVerdicts")
+    analysis = relationship("EnumAnalysis", back_populates="analyses")
+    verdict = relationship("EnumVerdicts", back_populates="analyses")
