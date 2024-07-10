@@ -10,7 +10,6 @@ class Analysis(Base):
     analysis_id = Column(Integer, ForeignKey('enum_analysis.id'))
     verdict_id = Column(Integer, ForeignKey('enum_verdicts.id'))
     
-    email = relationship("Email")
+    email = relationship("Email", back_populates="analyses")
     analysis = relationship("EnumAnalysis")
     verdict = relationship("EnumVerdicts")
-

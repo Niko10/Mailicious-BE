@@ -285,8 +285,8 @@ def search_examples():
     DETECTION_SERVER_USER_PASSWORD = "poc"
     DETECTION_SERVER_USER_FULL_NAME = "poc"
 
-    user_response = create_user(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD, DETECTION_SERVER_USER_FULL_NAME)
-    print("Create User Response:", user_response)
+    #user_response = create_user(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD, DETECTION_SERVER_USER_FULL_NAME)
+    #print("Create User Response:", user_response)
 
     # Login and get headers
     headers = login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
@@ -299,6 +299,13 @@ def search_examples():
         print("Create Email Response:", email_response)
 
         # Search emails by sender
+        search_advanced_results = search_advanced({"sender": 'user', "text": "mock"}, headers)
+        print("Search Advanced Results:", search_advanced_results)
+
+        # create email analysis
+        analysis_response = create_email_analysis(headers, email_response['id'], 1, 1)
+        print("Create Analysis Response:", analysis_response)
+
         search_advanced_results = search_advanced({"sender": 'user', "text": "mock"}, headers)
         print("Search Advanced Results:", search_advanced_results)
                     
