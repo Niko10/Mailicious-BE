@@ -60,9 +60,9 @@ def test_search_emails_advanced(headers, sender=None, receiver=None, content=Non
         search_params["to_time"] = to_time
     if text:
         search_params["text"] = text
-    if verdict_id or verdict_id == 0:
+    if verdict_id != None:
         print("Verdict ID:", verdict_id)
-        search_params["verdict_id"] = verdict_id
+        search_params["verdict"] = verdict_id
     
     print("Search Params:", search_params)
     search_response = search_emails_advanced(headers, search_params)

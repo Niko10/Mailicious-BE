@@ -34,8 +34,9 @@ def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(g
         # get the commons:
         results = [email for email in results if email in text_results]
 
-    if params.verdict_id:
-        verdict_results = search_by_verdict(db=db, verdict_id=params.verdict_id)
+    if params.verdict is not None:
+        print("\tGot verdict!!: ", params.verdict)
+        verdict_results = search_by_verdict(db=db, verdict_id=params.verdict)
         # get the commons:
         results = [email for email in results if email in verdict_results]
     return results
