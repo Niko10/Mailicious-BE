@@ -65,6 +65,7 @@ def create_analysis_type(headers, name, description):
     return response.json()
 
 def create_email_analysis(headers, email_id, analysis_id, verdict_id):
+    print("\t\t\tCreating email analysis")
     url = f"{BASE_URL}/analysis/"
     payload = {
         "email_id": email_id,
@@ -145,7 +146,12 @@ def get_current_user(headers):
 
 def search_advanced(params, headers):
     url = f"{BASE_URL}/search/advanced"
-    response = requests.get(url, json=params, headers=headers)
+    response = requests.post(url, json=params, headers=headers)
+    return response.json()
+
+def search_emails_advanced(headers, params):
+    url = f"{BASE_URL}/search/advanced"
+    response = requests.post(url, json=params, headers=headers)
     return response.json()
 
 
@@ -277,7 +283,6 @@ def initial_setup_example():
     else:
         print("Login failed")
     
-
 def search_examples():
     
     # Create a user

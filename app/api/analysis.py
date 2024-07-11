@@ -11,6 +11,7 @@ router = APIRouter()
 
 @router.post("/", response_model=Analysis)
 def create_analysis(analysis: AnalysisCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    breakpoint()
     return crud_analysis.create_analysis(db=db, analysis=analysis)
 
 @router.get("/{analysis_id}", response_model=Analysis)
