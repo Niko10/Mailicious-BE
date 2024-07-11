@@ -20,3 +20,5 @@ class IntegratedEmailSearchParams(BaseModel):
     from_time: Optional[datetime] = None
     to_time: Optional[datetime] = None
     text: Optional[str] = None
+    verdict_id: Optional[int] = None
+    

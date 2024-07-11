@@ -46,7 +46,7 @@ def test_create_analysis(headers, email_id, analysis_id, verdict_id):
         return analysis_response
     return False
 
-def test_search_emails_advanced(headers, sender=None, receiver=None, content=None, from_time=None, to_time=None, text=None):
+def test_search_emails_advanced(headers, sender=None, receiver=None, content=None, from_time=None, to_time=None, text=None, verdict_id=None):
     search_params = {}
     if sender:
         search_params["sender"] = sender
@@ -60,7 +60,11 @@ def test_search_emails_advanced(headers, sender=None, receiver=None, content=Non
         search_params["to_time"] = to_time
     if text:
         search_params["text"] = text
+    if verdict_id or verdict_id == 0:
+        print("Verdict ID:", verdict_id)
+        search_params["verdict_id"] = verdict_id
     
+    print("Search Params:", search_params)
     search_response = search_emails_advanced(headers, search_params)
     print("Search Email Response:", search_response)
     return search_response
@@ -179,6 +183,26 @@ def test1():
         success_counter += 1
     else:
         print("[X] Search 2 failed")
+        failure_counter += 1
+    print("-------------------\n")
+
+    search_response = test_search_emails_advanced(headers, verdict_id=1)
+    print("Search Response:", search_response)
+    if len(search_response) == 6:
+        print("[V] Search 2.1 successful")
+        success_counter += 1
+    else:
+        print("[X] Search 2.1 failed")
+        failure_counter += 1
+    print("-------------------\n")
+
+    search_response = test_search_emails_advanced(headers, verdict_id=0)
+    print("Search Response:", search_response)
+    if len(search_response) == 6:
+        print("[V] Search 3.1 successful")
+        success_counter += 1
+    else:
+        print("[X] Search 3.1 failed")
         failure_counter += 1
     print("-------------------\n")
 

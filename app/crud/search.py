@@ -19,9 +19,9 @@ def search_emails(db: Session, params: dict):
 
     return query.order_by(Email.email_datetime.desc()).all()
 
-def search_by_verdict(db: Session, verdict_id: int, analysis_id: int):
+def search_by_verdict(db: Session, verdict_id: int):
     query = db.query(Email).join(Analysis, Analysis.email_id == Email.id).filter(
-        and_(Analysis.verdict_id == verdict_id, Analysis.analysis_id == analysis_id)
+        and_(Analysis.verdict_id == verdict_id)
     )
     return query.order_by(Email.email_datetime.desc()).all()
 
