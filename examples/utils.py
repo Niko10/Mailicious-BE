@@ -35,13 +35,16 @@ def login(email, password):
         print(f"Login failed: {response.json()}")
         return None
 
-def create_email(headers, sender, receiver, email_datetime, content):
+def create_email(headers, sender, recipients, email_datetime, subject, content, attachments, ASNs):
     url = f"{BASE_URL}/emails/"
     payload = {
         "sender": sender,
-        "receiver": receiver,
+        "recipients": recipients,
         "email_datetime": email_datetime,
-        "content": content
+        "subject": subject,
+        "content": content,
+        "attachments": attachments,
+        "ASNs": ASNs
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
@@ -56,7 +59,7 @@ def create_verdict(headers, name, description):
     return response.json()
 
 def create_analysis_type(headers, name, description):
-    url = f"{BASE_URL}/enum_analysis/"
+    url = f"{BASE_URL}/enum_modules/"
     payload = {
         "name": name,
         "description": description
@@ -65,12 +68,12 @@ def create_analysis_type(headers, name, description):
     return response.json()
 
 def create_email_analysis(headers, email_id, analysis_id, verdict_id):
-    print("\t\t\tCreating email analysis")
     url = f"{BASE_URL}/analysis/"
     payload = {
         "email_id": email_id,
         "analysis_id": analysis_id,
-        "verdict_id": verdict_id
+        "verdict_id": verdict_id,
+        "created_on": datetime.now().isoformat()
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
@@ -91,7 +94,7 @@ def get_all_verdicts(headers):
     return response.json()
 
 def get_all_analysis_types(headers):
-    url = f"{BASE_URL}/enum_analysis/"
+    url = f"{BASE_URL}/enum_modules/"
     response = requests.get(url, headers=headers)
     return response.json()
 
@@ -103,19 +106,19 @@ def search_emails_by_sender(headers, sender):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
-def search_emails_by_receiver(headers, receiver):
+def search_emails_by_recipients(headers, recipients):
     url = f"{BASE_URL}/search/email"
     payload = {
-        "receiver": receiver
+        "recipients": recipients
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
-def search_emails_by_sender_and_receiver(headers, sender, receiver):
+def search_emails_by_sender_and_recipients(headers, sender, recipients):
     url = f"{BASE_URL}/search/email"
     payload = {
         "sender": sender,
-        "receiver": receiver
+        "recipients": recipients
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
@@ -152,6 +155,7 @@ def search_advanced(params, headers):
 def search_emails_advanced(headers, params):
     url = f"{BASE_URL}/search/advanced"
     response = requests.post(url, json=params, headers=headers)
+    print("Response:", response.content)
     return response.json()
 
 
@@ -166,7 +170,7 @@ def example_1():
         print("Login successful")
 
         # Create an email
-        email_response = create_email(headers, "testuser@example.com", "receiver@example.com", "2023-01-01T12:00:00", "This is a test email.")
+        email_response = create_email(headers, "testuser@example.com", "recipients@example.com", "2023-01-01T12:00:00", "This is a test email.")
         print("Create Email Response:", email_response)
 
         # Create a verdict
@@ -193,13 +197,13 @@ def example_1():
         search_sender = search_emails_by_sender(headers, "testuser@example.com")
         print("Search Emails by Sender:", search_sender)
 
-        # Search emails by receiver
-        search_receiver = search_emails_by_receiver(headers, "receiver@example.com")
-        print("Search Emails by Receiver:", search_receiver)
+        # Search emails by recipients
+        search_recipients = search_emails_by_recipients(headers, "recipients@example.com")
+        print("Search Emails by recipients:", search_recipients)
 
-        # Search emails by sender and receiver
-        search_sender_receiver = search_emails_by_sender_and_receiver(headers, "testuser@example.com", "receiver@example.com")
-        print("Search Emails by Sender and Receiver:", search_sender_receiver)
+        # Search emails by sender and recipients
+        search_sender_recipients = search_emails_by_sender_and_recipients(headers, "testuser@example.com", "recipients@example.com")
+        print("Search Emails by Sender and recipients:", search_sender_recipients)
 
         # Search emails by time range
         from_time = "2024-01-01T00:00:00"
@@ -267,8 +271,8 @@ def initial_setup_example():
         print("All Analysis Types:", analysis_types)
 
         # create emails analysis for the analysis type
-        for sender, receiver, email_datetime, content in emails:
-            email_response = create_email(headers, sender, receiver, email_datetime, content)
+        for sender, recipients, email_datetime, content in emails:
+            email_response = create_email(headers, sender, recipients, email_datetime, content)
             print("Create Email Response:", email_response)
 
             # create an analysis for the email randomly

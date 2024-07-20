@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.analysis import Analysis
-from app.schemas.analysis import AnalysisCreate, AnalysisUpdate
+from app.schemas.email import AnalysisCreate, AnalysisUpdate
 
 def get_analysis(db: Session, analysis_id: int):
     return db.query(Analysis).filter(Analysis.id == analysis_id).first()

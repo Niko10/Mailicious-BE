@@ -4,7 +4,7 @@ from datetime import datetime
 
 class EmailSearchParams(BaseModel):
     sender: Optional[str] = None
-    receiver: Optional[str] = None
+    recipients: Optional[str] = None
     content: Optional[str] = None
     from_time: Optional[datetime] = None
     to_time: Optional[datetime] = None
@@ -14,11 +14,12 @@ class VerdictSearchParams(BaseModel):
     analysis_id: int
 
 class IntegratedEmailSearchParams(BaseModel):
-    sender: Optional[str] = None
-    receiver: Optional[str] = None
+    senders: Optional[str] = None
+    recipients: Optional[str] = None
     content: Optional[str] = None
+    subject: Optional[str] = None
     from_time: Optional[datetime] = None
     to_time: Optional[datetime] = None
     text: Optional[str] = None
-    verdict: Optional[int] = None
+    verdict: Optional[VerdictSearchParams] = None
     

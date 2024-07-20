@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from app.schemas.analysis import Analysis, AnalysisCreate, AnalysisUpdate
+from app.schemas.email import AnalysisInDBBase as Analysis, AnalysisCreate, AnalysisUpdate
 from app.crud import analysis as crud_analysis
 from app.db.database import get_db
 from app.api.auth import get_current_user
@@ -21,7 +21,6 @@ def read_analysis(analysis_id: int, db: Session = Depends(get_db), current_user:
     return db_analysis
 
 @router.get("/", response_model=List[Analysis])
-#@router.get("/")
 def read_analyses(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     analyses = crud_analysis.get_analyses(db, skip=skip, limit=limit)
     return analyses

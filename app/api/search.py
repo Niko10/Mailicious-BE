@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
-from app.schemas.email import Email
+from app.schemas.email import Email, EmailSearchResult, EmailInDBBase
 from app.schemas.search import EmailSearchParams, VerdictSearchParams, IntegratedEmailSearchParams
 from app.crud.search import search_emails, search_by_verdict, search_emails_by_text
 from app.db.database import get_db
@@ -25,19 +25,45 @@ def search_by_text(text: str, db: Session = Depends(get_db), current_user: User 
     results = search_emails_by_text(db=db, text=text)
     return results
 
-@router.post("/search/advanced", response_model=List[Email])
+@router.post("/search/advanced", response_model=List[EmailSearchResult])
 def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     results = search_emails(db=db, params=params.dict())
     
     if params.text:
         text_results = search_emails_by_text(db=db, text=params.text)
-        # get the commons:
         results = [email for email in results if email in text_results]
 
     if params.verdict is not None:
-        print("\tGot verdict!!: ", params.verdict)
-        verdict_results = search_by_verdict(db=db, verdict_id=params.verdict)
-        # get the commons:
+        verdict_results = search_by_verdict(db=db, 
+                                            verdict_id=params.verdict.verdict_id, 
+                                            analysis_id=params.verdict.analysis_id)
         results = [email for email in results if email in verdict_results]
-    return results
 
+
+    # Transform analyses in EmailSearchResult
+    transformed_results = []
+    for email in results:
+        email_dict = email.__dict__
+        email_dict['analyses'] = [
+            {
+                "id": analysis.id,
+                "email_id": analysis.email_id,
+                "analysis_id": analysis.analysis_id,
+                "verdict_id": analysis.verdict_id,
+                "analysis": {
+                    "id": analysis.analysis.id,
+                    "name": analysis.analysis.name,
+                    "description": analysis.analysis.description
+                },
+                "verdict": {
+                    "id": analysis.verdict.id,
+                    "name": analysis.verdict.name,
+                    "description": analysis.verdict.description
+                }
+            }
+            for analysis in email.analyses
+        ]
+        transformed_result = EmailSearchResult(**email.__dict__)
+        transformed_results.append(transformed_result)
+
+    return transformed_results

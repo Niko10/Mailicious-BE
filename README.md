@@ -55,7 +55,7 @@ And you will get the response:
     ## enum_verdicts table
     ![alt text](image-2.png)
 
-    ## enum_analysis table
+    ## enum_modules table
     ![alt text](image-3.png)
 
     ## emails table
