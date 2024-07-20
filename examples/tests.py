@@ -1,5 +1,6 @@
 from utils import *
 import sys
+import json
 
 def test_login(username, password):
     headers = login(username, password)
@@ -201,11 +202,79 @@ def advanced_search_test():
     print("[DEBUG] Search Response 1:", search_response)
 
 
+def create_fields_enum_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    fields = ["domain", "subject", "asn", "country"]
+    for name in fields:
+        fields_response = create_fields_enum(headers, name)
+        print("Create Fields Response:", fields_response)
+        if not fields_response.get("id"):
+            print("[X] Failed to create fields enum")
+        else:
+            print("[V] Fields enum created successfully")
+    print("-------------------\n")
+
+def get_fields_enum_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    fields = get_fields_enums(headers)
+    print("All Fields:", fields)
+    if len(fields) == 4:
+        print("[V] All fields fetched successfully")
+    else:
+        print("[X] Failed to fetch all fields")
+    print("-------------------\n")
+
+
+def create_blacklist_items_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    fields = get_fields_enums(headers)
+
+    blacklist = create_blacklist(headers, fields[0]['id'], "example.com")
+    print("Create 1st Blacklist Response:", blacklist)
+    if blacklist.get("id"):
+        print("[V] 1st Blacklist created successfully")
+    else:
+        print("[X] 1st Failed to create blacklist")
+
+    blacklist = create_blacklist(headers, fields[2]['id'], "ASN1")
+    print("Create 3rd Blacklist Response:", blacklist)
+    if blacklist.get("id"):
+        print("[V] 3rd Blacklist created successfully")
+    else:
+        print("[X] 3rd Failed to create blacklist")
+    
+    blacklist = create_blacklist(headers, fields[2]['id'], "ASN2")
+    print("Create 4th Blacklist Response:", blacklist)
+    if blacklist.get("id"):
+        print("[V] 4th Blacklist created successfully")
+    else:
+        print("[X] 4th Failed to create blacklist")
+    print("-------------------\n")
+
+def get_blacklist_items_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    blacklists = get_blacklists_grouped(headers)
+    print("All Blacklists grouped:\n", json.dumps(blacklists, indent=4))
+    if len(blacklists) == 4:
+        print("[V] All blacklists fetched successfully")
+    else:
+        print("[X] Failed to fetch all blacklists")
+    print("-------------------\n")
+
+
+
 if __name__ == "__main__":
     tests = sys.argv[1:]
-    tests_map = [initial_setup, advanced_search_test, add_analysis_to_email]
+    tests_map = [initial_setup, # 1
+                advanced_search_test, # 2
+                add_analysis_to_email, # 3
+                create_fields_enum_test, # 4
+                get_fields_enum_test, # 5
+                create_blacklist_items_test, # 6
+                get_blacklist_items_test # 7
+                ]
     
-
     for test in tests:
         if test.isdigit():
             test = int(test) - 1

@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import user, auth, email, enum_modules, enum_verdicts, search, analysis
+from app.api import user, auth, email, enum_modules, enum_verdicts, search, analysis, enum_fields, blacklist
 from app.db.database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -16,6 +16,8 @@ app.include_router(enum_modules.router, prefix="/enum_modules", tags=["enum_modu
 app.include_router(enum_verdicts.router, prefix="/enum_verdicts", tags=["enum_verdicts"])
 app.include_router(analysis.router, prefix="/analysis", tags=["analysis"])
 app.include_router(search.router, tags=["search"])
+app.include_router(enum_fields.router, prefix="/fields_enum", tags=["fields_enum"])
+app.include_router(blacklist.router, prefix="/blacklist", tags=["blacklist"])
 
 @app.get("/")
 def read_root():

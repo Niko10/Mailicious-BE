@@ -159,6 +159,29 @@ def search_emails_advanced(headers, params):
     return response.json()
 
 
+def create_fields_enum(headers, name):
+    url = f"{BASE_URL}/fields_enum/"
+    data = {"name": name}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+def get_fields_enums(headers, skip=0, limit=10):
+    url = f"{BASE_URL}/fields_enum/?skip={skip}&limit={limit}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+        
+
+def create_blacklist(headers, field_id, value):
+    url = f"{BASE_URL}/blacklist/"
+    data = {"field_id": field_id, "value": value}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+def get_blacklists_grouped(headers):
+    url = f"{BASE_URL}/blacklist/grouped"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")
