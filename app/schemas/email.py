@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+from pydantic import BaseModel, EmailStr, Field, computed_field, validator
 from datetime import datetime
 from typing import List, Optional, Dict
 from app.schemas.enum_modules import EnumModules
@@ -45,22 +45,37 @@ class EmailUpdate(EmailBase):
 
 class EmailInDBBase(EmailBase):
     analyses: List[AnalysisInDBBase] = []
+
     class Config:
         orm_mode = True
 
+    def __init__(self, **data):
+        super().__init__(**data)
+
+    
+
 class EmailSearchResult(EmailInDBBase):
     analyses: Dict[str, str] = {}
+    final_verdict: Optional[int] = None
 
     def __init__(self, **data):
         analyses_data = data.pop('analyses', [])
         super().__init__(**data)
         self.analyses = self.transform_analyses(analyses_data)
+        self.final_verdict = self.compute_final_verdict(analyses_data)
 
     def transform_analyses(self, analyses: List[Dict]) -> Dict[str, str]:
         transformed_analyses = {}
         for analysis in analyses:
             transformed_analyses[analysis['analysis']['name']] = analysis['verdict']['name']
         return transformed_analyses
+    
+    def compute_final_verdict(self, analyses: List[Dict]) -> Optional[int]:
+        if not analyses:
+            current_class = self.__class__.__name__
+            print(f"[DEBUG] {current_class}.compute_final_verdict - No analyses found")
+            return None
+        return max(analysis['verdict_id'] for analysis in analyses)
 
 class EmailInSearch(EmailInDBBase):
     pass

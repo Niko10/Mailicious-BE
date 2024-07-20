@@ -1,5 +1,5 @@
 from utils import *
-
+import sys
 
 def test_login(username, password):
     headers = login(username, password)
@@ -171,7 +171,20 @@ def initial_setup():
         analysis_response = create_email_analysis(headers, email_response['id'], analysis_id, verdict_id)
         print("Create Analysis Response:", analysis_response)
     
-    
+
+def add_analysis_to_email(email_id=1, analysis_id=2, verdict_id=2):
+    # Login
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    # create analysis
+    analysis_response = test_create_analysis(headers, email_id, analysis_id, verdict_id)
+    print("Create Analysis Response:", analysis_response)
+    if analysis_response.get("id"):
+        print("[V] Analysis created successfully")
+    else:
+        print("[X] Failed to create analysis")
+    print("-------------------\n")
+
 
 def advanced_search_test():
     # Login
@@ -187,8 +200,21 @@ def advanced_search_test():
     )
     print("[DEBUG] Search Response 1:", search_response)
 
+
 if __name__ == "__main__":
-    initial_setup()
-    advanced_search_test()
+    tests = sys.argv[1:]
+    tests_map = [initial_setup, advanced_search_test, add_analysis_to_email]
+    
+
+    for test in tests:
+        if test.isdigit():
+            test = int(test) - 1
+            if test < len(tests_map):
+                print(f"Running test name: {tests_map[test].__name__}")
+                tests_map[test]()
+            else:
+                print("Invalid test number")
+        else:
+            print("Invalid test number")
 
     
