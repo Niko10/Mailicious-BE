@@ -79,6 +79,43 @@ DETECTION_SERVER_USER_NAME = "demo@example.com"
 DETECTION_SERVER_USER_PASSWORD = "demo"
 DETECTION_SERVER_USER_FULL_NAME = "demo test"
 
+# Test functions message:
+INVALID_TEST_NUMBER = "Invalid test number"
+AVAILABLE_TESTS = """
+Here are available tests:
+1. Initial Setup - 
+    - Create a user
+    - Login
+    - Create Verdicts
+    - Create Modules
+    - Create Emails
+    - Create Analysis
+2. Advanced Search Test -
+    - Perform advanced search
+3. Add Analysis to Email -
+    - Add analysis to email
+4. Create Fields Enum Test -
+    - Create fields enum
+5. Get Fields Enum Test -
+    - Get fields enum
+6. Create Blacklist Items Test -
+    - Create blacklist items
+7. Get Blacklist Items Test -
+    - Get blacklist items
+8. Set POC User -
+    - Create a POC user
+    - Login as POC user
+
+To run a test, use the following command:
+python tests.py <test_number>
+
+Example:
+python tests.py 1
+python tests.py 1 2 3
+python tests.py 3 4 1
+"""
+
+
 def create_test_user():
     user = test_create_user(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD, DETECTION_SERVER_USER_FULL_NAME)
     if not user:
@@ -262,7 +299,22 @@ def get_blacklist_items_test():
         print("[X] Failed to fetch all blacklists")
     print("-------------------\n")
 
+def set_poc_user():
+    username, password, fullname = "poc@test.com", "poc", "poc"
+    user = test_create_user(username, password, fullname)
+    if not user:
+        print("[X] Failed to POC create user")
+        return False
+    
+    print("[V] POC User created successfully, trying to login")
 
+    headers = test_login(username, password)
+    if not headers:
+        print("[X] Failed to POC login")
+        return False
+    
+    print("[V] POC User logged in successfully")
+    print("-------------------\n")
 
 if __name__ == "__main__":
     tests = sys.argv[1:]
@@ -272,7 +324,8 @@ if __name__ == "__main__":
                 create_fields_enum_test, # 4
                 get_fields_enum_test, # 5
                 create_blacklist_items_test, # 6
-                get_blacklist_items_test # 7
+                get_blacklist_items_test, # 7
+                set_poc_user # 8
                 ]
     
     for test in tests:
@@ -282,8 +335,14 @@ if __name__ == "__main__":
                 print(f"Running test name: {tests_map[test].__name__}")
                 tests_map[test]()
             else:
-                print("Invalid test number")
+                print(INVALID_TEST_NUMBER)
+                print(AVAILABLE_TESTS)
+                
         else:
-            print("Invalid test number")
+            print(INVALID_TEST_NUMBER)
+            print(AVAILABLE_TESTS)
+            break
+    
+
 
     
