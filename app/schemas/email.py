@@ -56,14 +56,21 @@ class EmailInDBBase(EmailBase):
 
 class EmailSearchResult(EmailInDBBase):
     analyses: Dict[str, str] = {}
-    final_verdict: Optional[int] = None
+    final_verdict: Optional[str] = None
 
     def __init__(self, **data):
         analyses_data = data.pop('analyses', [])
         super().__init__(**data)
+        self.transform_lists_fields_to_list_type()
         self.analyses = self.transform_analyses(analyses_data)
         self.final_verdict = self.compute_final_verdict(analyses_data)
 
+    def transform_lists_fields_to_list_type(self):
+        print("[DEBUG-NEW1] transform_lists_fields_to_list_type self: " , self)
+        self.recipients = self.recipients.split(",")
+        self.attachments = self.attachments.split(",")
+        self.ASNs = self.ASNs.split(",")
+    
     def transform_analyses(self, analyses: List[Dict]) -> Dict[str, str]:
         transformed_analyses = {}
         for analysis in analyses:
@@ -75,7 +82,17 @@ class EmailSearchResult(EmailInDBBase):
             current_class = self.__class__.__name__
             print(f"[DEBUG] {current_class}.compute_final_verdict - No analyses found")
             return None
-        return max(analysis['verdict_id'] for analysis in analyses)
+        
+        final_verdict_id = max(analysis['verdict_id'] for analysis in analyses);
+        print("[DEBUG] compute_final_verdict final_verdict_id: ", final_verdict_id)
+        for analysis in analyses:
+            if analysis['verdict_id'] == final_verdict_id:
+                final_verdict_name = analysis['analysis']['name']
+                break
+        return final_verdict_name
+                
+
+        
 
 class EmailInSearch(EmailInDBBase):
     pass

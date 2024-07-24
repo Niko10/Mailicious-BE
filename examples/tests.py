@@ -137,7 +137,7 @@ def login_test_user():
     return headers
 
 def create_verdicts_enums(headers):
-    verdicts = [("Legit", "This is a legit email."), ("Evil", "This is not a evil email.")]
+    verdicts = [("Benign", "This is a benign email."), ("Suspicious", "This is not a suspicious email."), ("Malicious", "This is a malicious email.")]
     for name, description in verdicts:
         verdict_response = create_verdict(headers, name, description)
         print("Create Verdict Response:", verdict_response)

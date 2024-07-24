@@ -148,12 +148,12 @@ def get_current_user(headers):
     return response.json()
 
 def search_advanced(params, headers):
-    url = f"{BASE_URL}/search/advanced"
+    url = f"{BASE_URL}/search/"
     response = requests.post(url, json=params, headers=headers)
     return response.json()
 
 def search_emails_advanced(headers, params):
-    url = f"{BASE_URL}/search/advanced"
+    url = f"{BASE_URL}/search/"
     response = requests.post(url, json=params, headers=headers)
     print("Response:", response.content)
     return response.json()

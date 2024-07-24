@@ -25,7 +25,7 @@ def search_by_text(text: str, db: Session = Depends(get_db), current_user: User 
     results = search_emails_by_text(db=db, text=text)
     return results
 
-@router.post("/search/advanced", response_model=List[EmailSearchResult])
+@router.post("/search/", response_model=List[EmailSearchResult])
 def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     results = search_emails(db=db, params=params.dict())
     
