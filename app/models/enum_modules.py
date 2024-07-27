@@ -10,3 +10,4 @@ class EnumModules(Base):
     description = Column(String)
 
     analyses = relationship("Analysis", back_populates="analysis")
+    actions = relationship("Actions", back_populates="module")

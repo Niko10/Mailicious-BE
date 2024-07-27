@@ -194,6 +194,29 @@ def get_blacklists(headers):
     response = requests.get(url, headers=headers)
     return response.json()
 
+def create_action(headers, verdict_id, module_id, block, alert):
+    url = f"{BASE_URL}/actions/create"
+    data = {"verdict_id": verdict_id, "module_id": module_id, "block": block, "alert": alert}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+def get_actions(headers):
+    url = f"{BASE_URL}/actions/"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+# def update_action(headers, id, verdict_id, module_id, block, alert):
+#     url = f"{BASE_URL}/actions/{id}"
+#     data = {"verdict_id": verdict_id, "module_id": module_id, "block": block, "alert": alert}
+#     response = requests.put(url, json=data, headers=headers)
+#     return response.json()
+
+def update_actions_bulk(headers, actions):
+    print("[DEBUG] utils update_actions_bulk actions: ", actions)
+    url = f"{BASE_URL}/actions/update"
+    response = requests.post(url, json=actions, headers=headers)
+    return response.json()
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")

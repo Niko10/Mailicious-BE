@@ -10,3 +10,4 @@ class EnumVerdicts(Base):
     description = Column(String)
 
     analyses = relationship("Analysis", back_populates="verdict")
+    actions = relationship("Actions", back_populates="verdict")

@@ -3,6 +3,7 @@ import sys
 import json
 
 def test_login(username, password):
+    print("Logging in - ", username, " - ", password)
     headers = login(username, password)
     if headers:
         print("Login successful")
@@ -254,6 +255,7 @@ def create_fields_enum_test():
 
 def get_fields_enum_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    print("Getting all fields...")
     fields = get_fields_enums(headers)
     print("All Fields:", fields)
     if len(fields) == 4:
@@ -341,8 +343,69 @@ def set_poc_user():
     print("[V] POC User logged in successfully")
     print("-------------------\n")
 
+
+def create_and_update_and_get_bulk_actions_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    actions = [
+        {
+            "verdict_id": 1,
+            "module_id": 1,
+            "block": False,
+            "alert": True
+        },
+        {
+            "verdict_id": 2,
+            "module_id": 1,
+            "block": True,
+            "alert": True
+        },
+        {
+            "verdict_id": 1,
+            "module_id": 2,
+            "block": False,
+            "alert": False
+        },
+        {
+            "verdict_id": 2,
+            "module_id": 2,
+            "block": False,
+            "alert": True
+        }
+    ]
+
+    for action in actions:
+        print("Creating action - ", action)
+        action_response = create_action(headers, action["verdict_id"],  action["module_id"], action["block"], action["alert"])
+        print("Create Action Response:", action_response)
+        if not action_response.get("id"):
+            print("[X] Failed to create action")
+        else:
+            print("[V] Action created successfully")
+
+    print("Updating actions...")
+    actions_response = update_actions_bulk(headers, actions)
+    print("Create Bulk Actions Response:", actions_response)
+    if actions_response.get("id"):
+        print("[V] Bulk Actions created successfully")
+    else:
+        print("[X] Failed to create bulk actions")
+    
+    print("Getting all actions...")
+    actions = get_actions(headers)
+    print("All Actions:", actions)
+    if len(actions) == 4:
+        print("[V] All actions fetched successfully:")
+        for action in actions:
+            print("\t", action)
+    else:
+        print("[X] Failed to fetch all actions")
+    print("-------------------\n")
+
+
+
 if __name__ == "__main__":
     # Defult to setup - 1 4 6 8
+    print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
                 advanced_search_test, # 2
@@ -353,8 +416,8 @@ if __name__ == "__main__":
                 get_blacklist_items_test, # 7
                 set_poc_user, # 8
                 delete_blacklist_item_test, # 9
-                get_blacklist_items_list_test # 10
-
+                get_blacklist_items_list_test, # 10
+                create_and_update_and_get_bulk_actions_test # 11
                 ]
     
     for test in tests:
