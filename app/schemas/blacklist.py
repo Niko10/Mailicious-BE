@@ -2,6 +2,10 @@ from pydantic import BaseModel
 from typing import Optional, Dict
 from app.schemas.fields_enum import FieldsEnum
 
+
+class BlacklistDelete(BaseModel):
+    id: int
+
 class BlacklistBase(BaseModel):
     value: str
 
@@ -14,6 +18,10 @@ class BlacklistInDBBase(BlacklistBase):
 
     class Config:
         orm_mode = True
+
+class BlackListFlat(BlacklistDelete):
+    field_id: int
+    value: str
 
 class Blacklist(BlacklistInDBBase):
     pass

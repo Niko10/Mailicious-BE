@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from app.models.blacklist import Blacklist
-from app.schemas.blacklist import BlacklistCreate, BlacklistGrouped
+from app.schemas.blacklist import BlacklistCreate, BlacklistGrouped, BlacklistDelete
 from sqlalchemy import func
 from app.models.fields_enum import FieldsEnum
 
@@ -10,6 +10,16 @@ def create_blacklist_item(db: Session, blacklist: BlacklistCreate):
     db.commit()
     db.refresh(db_blacklist)
     return db_blacklist
+
+def delete_blacklist_item(db: Session, blacklist: BlacklistDelete):
+    db_blacklist = db.query(Blacklist).filter(Blacklist.id == blacklist.id).first()
+    
+    if db_blacklist:
+        db.delete(db_blacklist)
+        db.commit()
+        return True
+    return False
+        
 
 def get_blacklist(db: Session, blacklist_id: int):
     return db.query(Blacklist).filter(Blacklist.id == blacklist_id).first()

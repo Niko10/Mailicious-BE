@@ -173,13 +173,24 @@ def get_fields_enums(headers, skip=0, limit=10):
         
 
 def create_blacklist(headers, field_id, value):
-    url = f"{BASE_URL}/blacklist/"
+    url = f"{BASE_URL}/blacklist/add"
     data = {"field_id": field_id, "value": value}
+    response = requests.post(url, json=data, headers=headers)
+    return response.json()
+
+def delete_blacklist_item(headers, id):
+    url = f"{BASE_URL}/blacklist/delete"
+    data = {"id": id}
     response = requests.post(url, json=data, headers=headers)
     return response.json()
 
 def get_blacklists_grouped(headers):
     url = f"{BASE_URL}/blacklist/grouped"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+def get_blacklists(headers):
+    url = f"{BASE_URL}/blacklist/"
     response = requests.get(url, headers=headers)
     return response.json()
 

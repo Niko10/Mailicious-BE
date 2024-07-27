@@ -290,10 +290,34 @@ def create_blacklist_items_test():
         print("[X] 4th Failed to create blacklist")
     print("-------------------\n")
 
+def delete_blacklist_item_test():
+    # create blacklist item
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    fields = get_fields_enums(headers)
+    blacklist = create_blacklist(headers, fields[0]['id'], "example.com")
+    print("Create Blacklist Response:", blacklist)
+    if blacklist.get("id"):
+        print("[V] Blacklist created successfully")
+    else:
+        print("[X] Failed to create blacklist")
+    blacklist_id = blacklist.get("id")
+    delete_blacklist = delete_blacklist_item(headers, blacklist_id)
+    print("Delete Blacklist Response:", delete_blacklist)
+
 def get_blacklist_items_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
     blacklists = get_blacklists_grouped(headers)
     print("All Blacklists grouped:\n", json.dumps(blacklists, indent=4))
+    if len(blacklists) == 4:
+        print("[V] All blacklists fetched successfully")
+    else:
+        print("[X] Failed to fetch all blacklists")
+    print("-------------------\n")
+
+def get_blacklist_items_list_test():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    blacklists = get_blacklists(headers)
+    print("All Blacklists:\n", json.dumps(blacklists, indent=4))
     if len(blacklists) == 4:
         print("[V] All blacklists fetched successfully")
     else:
@@ -327,7 +351,10 @@ if __name__ == "__main__":
                 get_fields_enum_test, # 5
                 create_blacklist_items_test, # 6
                 get_blacklist_items_test, # 7
-                set_poc_user # 8
+                set_poc_user, # 8
+                delete_blacklist_item_test, # 9
+                get_blacklist_items_list_test # 10
+
                 ]
     
     for test in tests:
