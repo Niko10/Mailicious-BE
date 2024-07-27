@@ -3,6 +3,7 @@ from pydantic import BaseModel
 class EnumModulesBase(BaseModel):
     name: str
     description: str
+    enabled: bool
 
 class EnumModulesCreate(EnumModulesBase):
     pass

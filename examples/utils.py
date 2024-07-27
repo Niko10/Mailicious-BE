@@ -59,11 +59,12 @@ def create_verdict(headers, name, description):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
-def create_analysis_type(headers, name, description):
+def create_module(headers, name, description, enabled):
     url = f"{BASE_URL}/enum_modules/"
     payload = {
         "name": name,
-        "description": description
+        "description": description,
+        "enabled": enabled
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
@@ -236,11 +237,11 @@ def example_1():
         print("Create Verdict Response:", verdict_response)
 
         # Create an analysis type
-        analysis_type_response = create_analysis_type(headers, "Test Analysis", "This is a test analysis.")
+        analysis_type_response = create_module(headers, "Test Analysis", "This is a test analysis.", True)
         print("Create Analysis Type Response:", analysis_type_response)
 
         # Create an analysis
-        analysis_response = create_email_analysis(headers, email_response['id'], analysis_type_response['id'], verdict_response['id'])
+        analysis_response = create_email_analysis(headers, email_response['id'], analysis_type_response['id'], verdict_response['id'], True)
         print("Create Analysis Response:", analysis_response)
 
         # Get all emails
@@ -307,7 +308,7 @@ def initial_setup_example():
             ("ExternalDataSources", "This Module interacts with several external data sources to enrich and globalize the detection capabilities"),
         ]
         for name, description in analysis_types:
-            analysis_type_response = create_analysis_type(headers, name, description)
+            analysis_type_response = create_module(headers, name, description)
             print("Create Analysis Type Response:", analysis_type_response)
         
         # create emails for example

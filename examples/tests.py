@@ -34,8 +34,8 @@ def test_create_verdict(headers, name, description):
         return verdict_response
     return False
 
-def test_create_analysis_type(headers, name, description):
-    analysis_response = create_analysis_type(headers, name, description)
+def test_create_module(headers, name, description, enabled=True):
+    analysis_response = create_module(headers, name, description, enabled)
     print("Create Analysis Response:", analysis_response)
     if analysis_response.get("id"):
         return analysis_response
@@ -149,9 +149,9 @@ def create_verdicts_enums(headers):
     print("-------------------\n")
 
 def create_modules_enum(headers):
-    modules = [("External Data Sources", "Detect by External Data Sources"), ("Blacklist", "Detect by blacklist"), ("Final Verdict", "Detect by final verdict")]
-    for name, description in modules:
-        modules = create_analysis_type(headers, name, description)
+    modules = [("External Data Sources", "Detect by External Data Sources", True), ("Blacklist", "Detect by blacklist", True), ("Final Verdict", "Detect by final verdict", True)]
+    for name, description, enabled in modules:
+        modules = create_module(headers, name, description, enabled)
         print("Create Analysis Response:", modules)
         if not modules.get("id"):
             print("[X] Failed to create analysis type")
