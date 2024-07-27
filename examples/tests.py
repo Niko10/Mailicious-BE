@@ -148,7 +148,7 @@ def create_verdicts_enums(headers):
     print("-------------------\n")
 
 def create_modules_enum(headers):
-    modules = [("External Data Sources", "Detect by External Data Sources"), ("Blacklist", "Detect by blacklist")]
+    modules = [("External Data Sources", "Detect by External Data Sources"), ("Blacklist", "Detect by blacklist"), ("Final Verdict", "Detect by final verdict")]
     for name, description in modules:
         modules = create_analysis_type(headers, name, description)
         print("Create Analysis Response:", modules)
@@ -165,14 +165,14 @@ def initial_setup():
         return
     
     headers = login_test_user()
-    create_verdicts_enums(headers) # Creates 2 verdicts
+    create_verdicts_enums(headers) # Creates 3 verdicts
     create_modules_enum(headers) # Creates 2 modules
     
     # create emails for example
     emails = [
-        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "ASN1", 1, 1),
-        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "ASN1, ASN2", 1, 2),
-        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "ASN1, ASN2, ASN3, ASN4", 2, 2)
+        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", 1, 1),
+        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", 1, 2),
+        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", 2, 2)
     ]
 
     # get all vericts
@@ -196,8 +196,8 @@ def initial_setup():
     
     # create emails
     print("Creating emails...")
-    for sender, recipients, email_datetime, subject, content, attachments, ASNs, verdict_id, analysis_id in emails:
-        email_response = create_email(headers, sender, recipients, email_datetime, subject, content, attachments, ASNs)
+    for sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status, verdict_id, analysis_id in emails:
+        email_response = create_email(headers, sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status)
         print("Create Email Response:", email_response)
         if email_response.get("id"):
             print("[V] Email created successfully")
@@ -208,6 +208,7 @@ def initial_setup():
         # create analysis
         analysis_response = create_email_analysis(headers, email_response['id'], analysis_id, verdict_id)
         print("Create Analysis Response:", analysis_response)
+    
     
 
 def add_analysis_to_email(email_id=1, analysis_id=2, verdict_id=2):
@@ -241,7 +242,7 @@ def advanced_search_test():
 
 def create_fields_enum_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
-    fields = ["domain", "subject", "asn", "country"]
+    fields = ["domain", "subject", "SPF_IP", "country"]
     for name in fields:
         fields_response = create_fields_enum(headers, name)
         print("Create Fields Response:", fields_response)
@@ -274,14 +275,14 @@ def create_blacklist_items_test():
     else:
         print("[X] 1st Failed to create blacklist")
 
-    blacklist = create_blacklist(headers, fields[2]['id'], "ASN1")
+    blacklist = create_blacklist(headers, fields[2]['id'], "SPF_IP1")
     print("Create 3rd Blacklist Response:", blacklist)
     if blacklist.get("id"):
         print("[V] 3rd Blacklist created successfully")
     else:
         print("[X] 3rd Failed to create blacklist")
     
-    blacklist = create_blacklist(headers, fields[2]['id'], "ASN2")
+    blacklist = create_blacklist(headers, fields[2]['id'], "SPF_IP2")
     print("Create 4th Blacklist Response:", blacklist)
     if blacklist.get("id"):
         print("[V] 4th Blacklist created successfully")
@@ -317,6 +318,7 @@ def set_poc_user():
     print("-------------------\n")
 
 if __name__ == "__main__":
+    # Defult to setup - 1 4 6 8
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
                 advanced_search_test, # 2

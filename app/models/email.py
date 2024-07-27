@@ -12,6 +12,7 @@ class Email(Base):
     subject = Column(String)
     content = Column(String)
     attachments = Column(String)
-    ASNs = Column(String)
+    SPF_IPs = Column(String)
+    SPF_status = Column(String)
 
     analyses = relationship("Analysis", back_populates="email")
