@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Optional, Dict
 from app.schemas.enum_modules import EnumModules
 from app.schemas.enum_verdicts import EnumVerdicts
+import json
 
 class AnalysisBase(BaseModel):
     email_id: int
@@ -79,16 +80,20 @@ class EmailSearchResult(EmailInDBBase):
         return transformed_analyses
     
     def compute_final_verdict(self, analyses: List[Dict]) -> Optional[int]:
+        print("\n\n[DEBUG-3.9-0] compute_final_verdict analyses:\n ", json.dumps(analyses))
         if not analyses:
             current_class = self.__class__.__name__
-            print(f"[DEBUG] {current_class}.compute_final_verdict - No analyses found")
+            print(f"[DEBUG-3.9-1] {current_class}.compute_final_verdict - No analyses found")
             return None
         
-        final_verdict_id = max(analysis['verdict_id'] for analysis in analyses);
-        print("[DEBUG] compute_final_verdict final_verdict_id: ", final_verdict_id)
+        for analysis in analyses:
+            print("[DEBUG-3.9-2] compute_final_verdict analysis: ", analysis['verdict_id'])
+        
+        final_verdict_id = max(analysis['verdict_id'] for analysis in analyses)
+        print("[DEBUG-3.9-3] compute_final_verdict final_verdict_id: ", final_verdict_id)
         for analysis in analyses:
             if analysis['verdict_id'] == final_verdict_id:
-                final_verdict_name = analysis['analysis']['name']
+                final_verdict_name = analysis['verdict']['name']
                 break
         return final_verdict_name
                 
