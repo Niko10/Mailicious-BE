@@ -70,5 +70,15 @@ def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(g
         ]
         transformed_result = EmailSearchResult(**email.__dict__)
         transformed_results.append(transformed_result)
+    
+    
+    final_results = []
+    # plaster the final verdict filter
+    if params.final_verdict:
+        for email in transformed_results:
+            for final_verdict in params.final_verdict:
+                if email.final_verdict == final_verdict:
+                    final_results.append(email)
+                
 
-    return transformed_results
+    return final_results

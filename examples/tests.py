@@ -50,7 +50,7 @@ def test_create_analysis(headers, email_id, analysis_id, verdict_id):
 
 def test_search_emails_advanced(headers, sender=None, recipients=None, 
                                 content=None, subject=None, from_time=None, 
-                                to_time=None, text=None, verdict_id=None, analysis_id=None):
+                                to_time=None, text=None, verdict_id=None, analysis_id=None, final_verdict=None):
     search_params = {}
     if sender:
         search_params["sender"] = sender
@@ -68,6 +68,8 @@ def test_search_emails_advanced(headers, sender=None, recipients=None,
         search_params["text"] = text
     if verdict_id != None:
         search_params["verdict"] = {"verdict_id": verdict_id, "analysis_id": analysis_id}
+    if final_verdict:
+        search_params["final_verdict"] = final_verdict
     
     print("\nSearch Params:\n", json.dumps(search_params, indent=4))
     search_response = search_emails_advanced(headers, search_params)
@@ -238,8 +240,9 @@ def advanced_search_test():
                                                    #recipients=["test", "user2@"],
                                                    #text="Test",
                                                    #sender=["user2@"]
-                                                   from_time="2024-07-26T19:00",
-                                                   to_time="2024-08-03T19:00",
+                                                   #from_time="2024-07-26T19:00",
+                                                   #to_time="2024-08-03T19:00",
+                                                   final_verdict = ["Benign"]
     )
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
@@ -404,6 +407,12 @@ def create_and_update_and_get_bulk_actions_test():
         print("[X] Failed to fetch all actions")
     print("-------------------\n")
 
+def read_all_enums():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    print("Reading all enums...")
+    print("All Verdicts:", get_all_verdicts(headers))
+    print("All Analysis Types:", get_all_analysis_types(headers))
+    print("All Fields:", get_fields_enums(headers))
 
 
 if __name__ == "__main__":
@@ -420,7 +429,8 @@ if __name__ == "__main__":
                 set_poc_user, # 8
                 delete_blacklist_item_test, # 9
                 get_blacklist_items_list_test, # 10
-                create_and_update_and_get_bulk_actions_test # 11
+                create_and_update_and_get_bulk_actions_test, # 11
+                read_all_enums # 12
                 ]
     
     for test in tests:

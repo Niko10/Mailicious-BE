@@ -21,5 +21,6 @@ class IntegratedEmailSearchParams(BaseModel):
     from_time: Optional[datetime] = None
     to_time: Optional[datetime] = None
     text: Optional[str] = None
-    verdict: Optional[list[VerdictSearchParams]] = None
+    verdict: Optional[list[str]] = None
+    final_verdict: Optional[list[str]] = None
     
