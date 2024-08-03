@@ -53,7 +53,7 @@ def test_search_emails_advanced(headers, sender=None, recipients=None,
                                 to_time=None, text=None, verdict_id=None, analysis_id=None):
     search_params = {}
     if sender:
-        search_params["senders"] = sender
+        search_params["sender"] = sender
     if recipients:
         search_params["recipients"] = recipients
     if subject:

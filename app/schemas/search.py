@@ -14,7 +14,7 @@ class VerdictSearchParams(BaseModel):
     analysis_id: int
 
 class IntegratedEmailSearchParams(BaseModel):
-    senders: Optional[list[str]] = None
+    sender: Optional[list[str]] = None
     recipients: Optional[list[str]] = None
     content: Optional[list[str]] = None
     subject: Optional[list[str]] = None

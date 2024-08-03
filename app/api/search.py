@@ -31,8 +31,8 @@ def search_by_text(text: str, db: Session = Depends(get_db), current_user: User 
 @router.post("/search/", response_model=List[EmailSearchResult])
 def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     debug_msg_current = f"{DEBUG_MSG_PREFIX} search_advanced"
-    print(f"[DEBUG] {debug_msg_current} - Params:\n", json.dumps(params.dict(), indent=4))
-    results = search_emails(db=db, params=params.dict())
+    print(f"[DEBUG] {debug_msg_current} - Params:\n", params.model_dump())
+    results = search_emails(db=db, params=params.model_dump())  
     
     if params.text:
         text_results = search_emails_by_text(db=db, text=params.text)
