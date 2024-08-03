@@ -7,6 +7,9 @@ from app.crud.search import search_emails, search_by_verdict, search_emails_by_t
 from app.db.database import get_db
 from app.api.auth import get_current_user
 from app.schemas.user import User
+import json
+
+DEBUG_MSG_PREFIX = "./app/api/search.py -"
 
 router = APIRouter()
 
@@ -27,6 +30,8 @@ def search_by_text(text: str, db: Session = Depends(get_db), current_user: User 
 
 @router.post("/search/", response_model=List[EmailSearchResult])
 def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    debug_msg_current = f"{DEBUG_MSG_PREFIX} search_advanced"
+    print(f"[DEBUG] {debug_msg_current} - Params:\n", json.dumps(params.dict(), indent=4))
     results = search_emails(db=db, params=params.dict())
     
     if params.text:
