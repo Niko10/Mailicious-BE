@@ -232,11 +232,9 @@ def advanced_search_test():
 
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
-                                                   sender="user1, ori",
-                                                   recipients="test, user2@",
+                                                   sender=["user1", "ori"],
+                                                   recipients=["test", "user2@"],
                                                    text="Test",
-                                                   verdict_id=1,
-                                                   analysis_id=1
     )
     print("[DEBUG] Search Response 1:", search_response)
 

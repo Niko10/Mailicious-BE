@@ -9,22 +9,30 @@ def search_emails(db: Session, params: dict):
     query = db.query(Email)
 
     if params.get("senders"):
-        senders = params["senders"].split(",")
+        senders = params["senders"]
         senders = [sender.strip() for sender in senders]  # Strip whitespace
         sender_conditions = [Email.sender.ilike(f"%{sender}%") for sender in senders]
         query = query.filter(or_(*sender_conditions))
         print("[DEBUG] Added sender conditions:", sender_conditions)
 
     if params.get("recipients"):
-        recipients = params["recipients"].split(",")
+        recipients = params["recipients"]
         recipients = [recipient.strip() for recipient in recipients]  # Strip whitespace
         recipient_conditions = [Email.recipients.ilike(f"%{recipient}%") for recipient in recipients]
         query = query.filter(or_(*recipient_conditions))
         print("[DEBUG] Added recipient conditions:", recipient_conditions)
 
     if params.get("content"):
-        query = query.filter(Email.content.ilike(f"%{params['content']}%"))
+        contents = params["content"]
+        content_conditions = [Email.content.ilike(f"%{content}%") for content in contents]
+        query = query.filter(or_(*content_conditions))
         print("[DEBUG] Added content condition:", params['content'])
+
+    if params.get("subject"):
+        subjects = params["subject"]
+        subject_conditions = [Email.subject.ilike(f"%{subject}%") for subject in subjects]
+        query = query.filter(or_(*subject_conditions))
+        print("[DEBUG] Added content condition:", params['subject'])
 
     if params.get("from_time"):
         query = query.filter(Email.email_datetime >= params["from_time"])
