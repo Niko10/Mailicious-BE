@@ -157,7 +157,6 @@ def search_advanced(params, headers):
 def search_emails_advanced(headers, params):
     url = f"{BASE_URL}/search/"
     response = requests.post(url, json=params, headers=headers)
-    print("Response:", response.content)
     return response.json()
 
 

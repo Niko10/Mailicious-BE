@@ -69,9 +69,8 @@ def test_search_emails_advanced(headers, sender=None, recipients=None,
     if verdict_id != None:
         search_params["verdict"] = {"verdict_id": verdict_id, "analysis_id": analysis_id}
     
-    print("\nSearch Params:\n\t", search_params)
+    print("\nSearch Params:\n", json.dumps(search_params, indent=4))
     search_response = search_emails_advanced(headers, search_params)
-    print("Search Email Response:\n\t", search_response)
     return search_response
 
 
@@ -232,11 +231,12 @@ def advanced_search_test():
 
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
-                                                   sender=["user1", "ori"],
-                                                   recipients=["test", "user2@"],
-                                                   text="Test",
+                                                   #sender=["user1", "ori"],
+                                                   #recipients=["test", "user2@"],
+                                                   #text="Test",
+                                                   sender=["user2@"]
     )
-    print("[DEBUG] Search Response 1:", search_response)
+    print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
 
 def create_fields_enum_test():
