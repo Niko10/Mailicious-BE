@@ -12,8 +12,8 @@ def search_emails(db: Session, params: dict):
 
     query = db.query(Email)
 
-    if params.get("senders"):
-        senders = params["senders"]
+    if params.get("sender"):
+        senders = params["sender"]
         senders = [sender.strip() for sender in senders]  # Strip whitespace
         sender_conditions = [Email.sender.ilike(f"%{sender}%") for sender in senders]
         query = query.filter(or_(*sender_conditions))
