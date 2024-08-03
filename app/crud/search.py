@@ -8,7 +8,7 @@ DEBUG_MSG_PREFIX = "./app/crud/search.py -"
 
 def search_emails(db: Session, params: dict):
     debug_msg_current = f"{DEBUG_MSG_PREFIX} search_emails"
-    print(f"[DEBUG] {debug_msg_current} - Params:\n", json.dumps(params, indent=4))
+    print(f"[DEBUG] {debug_msg_current} - Params:\n", params)
 
     query = db.query(Email)
 

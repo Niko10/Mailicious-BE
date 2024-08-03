@@ -237,7 +237,9 @@ def advanced_search_test():
                                                    #sender=["user1", "ori"],
                                                    #recipients=["test", "user2@"],
                                                    #text="Test",
-                                                   sender=["user2@"]
+                                                   #sender=["user2@"]
+                                                   from_time="2024-07-26T19:00",
+                                                   to_time="2024-08-03T19:00",
     )
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
