@@ -172,7 +172,10 @@ def initial_setup():
     emails = [
         ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", 1, 1),
         ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", 1, 2),
-        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", 2, 2)
+        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", 2, 2),
+        ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", 2, 2),
+        ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", "SPF_IP1", "SPF_status1", 1, 2),
+        ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", "SPF_IP1", "SPF_status1", 1, 2),
     ]
 
     # get all vericts
