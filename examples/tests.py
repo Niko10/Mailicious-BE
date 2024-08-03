@@ -242,7 +242,7 @@ def advanced_search_test():
                                                    #sender=["user2@"]
                                                    #from_time="2024-07-26T19:00",
                                                    #to_time="2024-08-03T19:00",
-                                                   final_verdict = ["Benign"]
+                                                   final_verdict = ["Suspicious"]
     )
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
@@ -411,7 +411,7 @@ def read_all_enums():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
     print("Reading all enums...")
     print("All Verdicts:", get_all_verdicts(headers))
-    print("All Analysis Types:", get_all_analysis_types(headers))
+    print("All Modules Types:", get_all_analysis_types(headers))
     print("All Fields:", get_fields_enums(headers))
 
 

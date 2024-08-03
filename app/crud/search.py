@@ -40,7 +40,7 @@ def search_emails(db: Session, params: dict):
     if params.get("to_time"):
         query = query.filter(Email.email_datetime <= params["to_time"])
 
-    print(f"[DEBUG] {debug_msg_current} Final Query:", str(query))
+    print(f"[DEBUG] {debug_msg_current} Final Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
 
 def search_by_verdict(db: Session, verdict_id: int, analysis_id: int):
@@ -50,7 +50,7 @@ def search_by_verdict(db: Session, verdict_id: int, analysis_id: int):
         and_(Analysis.verdict_id == verdict_id, Analysis.analysis_id == analysis_id)
     )
 
-    print(f"[DEBUG] {debug_msg_current} - Query:", str(query))
+    print(f"[DEBUG] {debug_msg_current} - Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
 
 
@@ -69,5 +69,5 @@ def search_emails_by_text(db: Session, text: str):
         )
     )
 
-    print(f"[DEBUG] {debug_msg_current} search_emails_by_text - Query:", str(query))
+    print(f"[DEBUG] {debug_msg_current} search_emails_by_text - Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()

@@ -13,15 +13,12 @@ def read_blacklists(skip: int = 0, limit: int = 10, db: Session = Depends(get_db
     blacklists = get_blacklists(db, skip=skip, limit=limit)
     return blacklists
 
-
 @router.post("/add", response_model=Blacklist)
 def create_blacklist(blacklist: BlacklistCreate, db: Session = Depends(get_db)):
-    print("[DEBUG] blacklist item: ", blacklist)
     return create_blacklist_item(db=db, blacklist=blacklist)
 
 @router.post("/delete")
 def delete_blacklist(blacklist: BlacklistDelete, db: Session = Depends(get_db)):
-    print("[DEBUG] blacklist item: ", blacklist)
     return delete_blacklist_item(db=db, blacklist=blacklist)
 
 @router.get("/grouped", response_model=List[BlacklistGrouped])

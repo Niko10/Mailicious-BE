@@ -68,7 +68,6 @@ class EmailSearchResult(EmailInDBBase):
         self.final_verdict = self.compute_final_verdict(analyses_data)
 
     def transform_lists_fields_to_list_type(self):
-        print("[DEBUG-NEW1] transform_lists_fields_to_list_type self: " , self)
         self.recipients = self.recipients.split(",")
         self.attachments = self.attachments.split(",")
         self.SPF_IPs = self.SPF_IPs.split(",")
@@ -80,17 +79,10 @@ class EmailSearchResult(EmailInDBBase):
         return transformed_analyses
     
     def compute_final_verdict(self, analyses: List[Dict]) -> Optional[int]:
-        print("\n\n[DEBUG-3.9-0] compute_final_verdict analyses:\n ", json.dumps(analyses))
         if not analyses:
-            current_class = self.__class__.__name__
-            print(f"[DEBUG-3.9-1] {current_class}.compute_final_verdict - No analyses found")
             return None
         
-        for analysis in analyses:
-            print("[DEBUG-3.9-2] compute_final_verdict analysis: ", analysis['verdict_id'])
-        
         final_verdict_id = max(analysis['verdict_id'] for analysis in analyses)
-        print("[DEBUG-3.9-3] compute_final_verdict final_verdict_id: ", final_verdict_id)
         for analysis in analyses:
             if analysis['verdict_id'] == final_verdict_id:
                 final_verdict_name = analysis['verdict']['name']
