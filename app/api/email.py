@@ -9,6 +9,10 @@ from app.schemas.user import User
 
 router = APIRouter()
 
+@router.get("/decision/{email_id}", response_model=bool)
+def get_decision(email_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return crud_email.get_email_decision(db, email_id=email_id)
+
 @router.post("/", response_model=Email)
 def create_email(email: EmailCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return crud_email.create_email(db=db, email=email)
@@ -38,3 +42,5 @@ def delete_email(email_id: int, db: Session = Depends(get_db), current_user: Use
     if db_email is None:
         raise HTTPException(status_code=404, detail="Email not found")
     return crud_email.delete_email(db, email_id=email_id)
+
+

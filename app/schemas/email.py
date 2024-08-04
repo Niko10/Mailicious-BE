@@ -91,7 +91,6 @@ class EmailSearchResult(EmailInDBBase):
                 
 
         
-
 class EmailInSearch(EmailInDBBase):
     pass
 

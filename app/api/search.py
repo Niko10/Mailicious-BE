@@ -71,22 +71,4 @@ def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(g
         transformed_result = EmailSearchResult(**email.__dict__)
         transformed_results.append(transformed_result)
     
-    print(f"[DEBUG] {debug_msg_current} - Transformed Results:\n", transformed_results)
-    print(f"[DEBUG] {debug_msg_current} - Transformed Results Len: ", len(transformed_results))
-    if params.final_verdict:
-        for email in transformed_results:
-            print(f"\n[DEBUG] {debug_msg_current} - Starting Email {email.id} has final verdict {email.final_verdict}")
-            should_remove = True
-            for final_verdict in params.final_verdict:
-                if email.final_verdict == final_verdict:
-                    should_remove = False
-                    print(f"[DEBUG] {debug_msg_current} - Email {email.id} has final verdict {email.final_verdict} which is in the list of final verdicts {params.final_verdict}")
-                    break
-            if should_remove:
-                print(f"[DEBUG] {debug_msg_current} - Email {email.id} has final verdict {email.final_verdict} which is not in the list of final verdicts {params.final_verdict}")
-                transformed_results.remove(email)
-            else:
-                print(f"[DEBUG] {debug_msg_current} - Email {email.id} has final verdict {email.final_verdict} which is in the list of final verdicts {params.final_verdict}")
-                
-
     return transformed_results

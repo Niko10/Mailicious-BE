@@ -217,6 +217,12 @@ def update_actions_bulk(headers, actions):
     response = requests.post(url, json=actions, headers=headers)
     return response.json()
 
+
+def get_email_decision(headers, email_id):
+    url = f"{BASE_URL}/emails/decision/{email_id}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")

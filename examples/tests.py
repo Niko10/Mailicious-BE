@@ -415,6 +415,16 @@ def read_all_enums():
     print("All Fields:", get_fields_enums(headers))
 
 
+def test_get_email_decision():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    email_id = 1
+    decision = get_email_decision(headers, email_id)
+    print("for email_id:", email_id, "Decision:", "Block" if decision else "Allow")
+    email_id = 2
+    decision = get_email_decision(headers, email_id)
+    print("for email_id:", email_id, "Decision:", "Block" if decision else "Allow")
+    return decision
+
 if __name__ == "__main__":
     # Defult to setup - 1 4 6 8
     print("\n\nRunning tests...\n\n")
@@ -430,7 +440,8 @@ if __name__ == "__main__":
                 delete_blacklist_item_test, # 9
                 get_blacklist_items_list_test, # 10
                 create_and_update_and_get_bulk_actions_test, # 11
-                read_all_enums # 12
+                read_all_enums, # 12
+                test_get_email_decision # 13
                 ]
     
     for test in tests:
@@ -451,3 +462,5 @@ if __name__ == "__main__":
 
 
     
+# on module 1, verdict 2 - block
+# on module 2, verdict 2 - alert
