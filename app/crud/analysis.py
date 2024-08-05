@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from app.models.analysis import Analysis
 from app.schemas.email import AnalysisCreate, AnalysisUpdate
+from app.crud import email 
 
 def get_analysis(db: Session, analysis_id: int):
     return db.query(Analysis).filter(Analysis.id == analysis_id).first()
@@ -13,6 +14,9 @@ def create_analysis(db: Session, analysis: AnalysisCreate):
     db.add(db_analysis)
     db.commit()
     db.refresh(db_analysis)
+
+    email.update_final_verdict(db, db_analysis.email_id)
+    
     return db_analysis
 
 def update_analysis(db: Session, db_analysis: Analysis, analysis_update: AnalysisUpdate):

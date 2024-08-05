@@ -57,3 +57,41 @@ def get_email_decision(db: Session, email_id: int):
     print("that's why we are allowing the email")
     print("Debugging ---------------\n")
     return False  # Allow the email
+
+
+def update_final_verdict(db: Session, email_id: int):
+    # step 1: get the analysis for the email
+    analyses = db.query(Analysis).filter(Analysis.email_id == email_id).all()
+    print("\nDebugging ---------------")
+    print("email_id: ", email_id)
+    worst_verdict_id = -1
+    
+    # step 2: find the worst verdict and its corresponding module
+    for analysis in analyses:
+        print(f"current analysis: {analysis.__dict__}")
+        if analysis.verdict_id > worst_verdict_id:
+            print(f"worst verdict_id: {worst_verdict_id} -> {analysis.verdict_id} beacuse of module_id: {analysis.analysis_id}")
+            worst_verdict_id = analysis.verdict_id
+    
+    final_verdict_module_id = 1 # should be retrieved from the database
+
+    # step 3: pull the analysis where email_id = email_id and analysis_id = final_verdict_module_id
+    final_verdict = db.query(Analysis).filter(Analysis.email_id == email_id, 
+                                              Analysis.analysis_id == final_verdict_module_id).first()
+
+    if final_verdict is None:
+        print("final verdict is None")
+        final_verdict = Analysis(email_id=email_id, analysis_id=final_verdict_module_id, verdict_id=worst_verdict_id)
+        db.add(final_verdict)
+        db.commit()
+        db.refresh(final_verdict)
+    else:
+        print("current final verdict: ", final_verdict)
+        # step 4: update the verdict of the final verdict module
+        final_verdict.verdict_id = worst_verdict_id
+        db.commit()
+        db.refresh(final_verdict)
+        print("finished updating the final verdict")
+    
+    return True
+    
