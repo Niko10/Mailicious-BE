@@ -341,8 +341,7 @@ def get_blacklist_items_list_test():
         print("[X] Failed to fetch all blacklists")
     print("-------------------\n")
 
-def set_poc_user():
-    username, password, fullname = "poc@test.com", "poc", "poc"
+def set_poc_user(username = "poc@test.com", password = "poc", fullname = "poc"):
     user = test_create_user(username, password, fullname)
     if not user:
         print("[X] Failed to POC create user")
@@ -375,6 +374,12 @@ def create_and_update_and_get_bulk_actions_test():
             "alert": True
         },
         {
+            "verdict_id": 3,
+            "module_id": 1,
+            "block": True,
+            "alert": True
+        },
+        {
             "verdict_id": 1,
             "module_id": 2,
             "block": False,
@@ -383,6 +388,30 @@ def create_and_update_and_get_bulk_actions_test():
         {
             "verdict_id": 2,
             "module_id": 2,
+            "block": False,
+            "alert": True
+        },
+        {
+            "verdict_id": 3,
+            "module_id": 2,
+            "block": False,
+            "alert": True
+        },
+        {
+            "verdict_id": 1,
+            "module_id": 3,
+            "block": False,
+            "alert": False
+        },
+        {
+            "verdict_id": 2,
+            "module_id": 3,
+            "block": False,
+            "alert": True
+        },
+        {
+            "verdict_id": 3,
+            "module_id": 3,
             "block": False,
             "alert": True
         }
@@ -416,6 +445,37 @@ def create_and_update_and_get_bulk_actions_test():
         print("[X] Failed to fetch all actions")
     print("-------------------\n")
 
+def test_update_actions_bulk():
+    updated_actions = [
+        {   
+            "id":8,
+            "verdict_id": 2,
+            "module_id": 3,
+            "block": True,
+            "alert": True
+        },
+        {
+            "id": 9,
+            "verdict_id": 3,
+            "module_id": 3,
+            "block": True,
+            "alert": True
+        }
+    ]
+
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    actions = get_actions(headers)
+    for action in actions:
+        print("Before updating action - ", action)
+    
+    actions = update_actions_bulk(headers, updated_actions)
+    for action in actions:
+        print("After updating action - ", action)
+    
+    print("-------------------\n")
+    
+
+
 def read_all_enums():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
     print("Reading all enums...")
@@ -435,7 +495,7 @@ def test_get_email_decision():
     return decision
 
 if __name__ == "__main__":
-    # Defult to setup - 1 4 6 8 11
+    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14
     print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
@@ -450,7 +510,8 @@ if __name__ == "__main__":
                 get_blacklist_items_list_test, # 10
                 create_and_update_and_get_bulk_actions_test, # 11
                 read_all_enums, # 12
-                test_get_email_decision # 13
+                test_get_email_decision, # 13
+                test_update_actions_bulk # 14
                 ]
     
     if not tests:
@@ -471,7 +532,7 @@ if __name__ == "__main__":
             print(AVAILABLE_TESTS)
             break
     
-
+    set_poc_user(username="poc@user.com", password="POCPass123!", fullname="POC User")
 
     
 # on module 1, verdict 2 - block

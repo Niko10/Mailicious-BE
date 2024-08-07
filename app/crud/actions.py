@@ -15,12 +15,26 @@ def create_action(db: Session, action: ActionBase):
     return db_action
 
 def update_actions_bulk(db: Session, actions: List[ActionRead]):
+    print("----------------- Debugging -----------------")
+    print("actions to update: ")
+    for action in actions:
+        print(action.__dict__)
+
     for action in actions:
         db_action = db.query(Actions).filter(Actions.id == action.id).first()
+        print("db_action to update: ", db_action.__dict__)
         for var, value in vars(action).items():
+            print(f"{var} = {value}")
             setattr(db_action, var, value) if value else None
-    db.commit()
-    return db.query(Actions).all()
+            
+        db.commit()
+        print("db_action: ", db_action.__dict__)
+        db.refresh(db_action)
+
+    new_actions = db.query(Actions).all()
+    print("new_actions: ", new_actions)
+    print("----------------- Debugging -----------------")
+    return new_actions
 
 def update_action(db: Session, db_action: Actions, action: ActionBase):
     for var, value in vars(action).items():
