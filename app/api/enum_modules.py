@@ -9,6 +9,10 @@ from app.schemas.user import User
 
 router = APIRouter()
 
+@router.post("/update/", response_model=EnumModules)
+def update_enum_modules(module: EnumModulesUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return crud_enum_modules.update_enum_module(db, module)
+
 @router.post("/", response_model=EnumModules)
 def create_enum_modules(enum_modules: EnumModulesCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return crud_enum_modules.create_enum_modules(db=db, enum_modules=enum_modules)
@@ -24,13 +28,6 @@ def read_enum_modules(enum_modules_id: int, db: Session = Depends(get_db), curre
 def read_enum_analyses(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     enum_analyses = crud_enum_modules.get_enum_analyses(db, skip=skip, limit=limit)
     return enum_analyses
-
-@router.put("/{enum_modules_id}", response_model=EnumModules)
-def update_enum_modules(enum_modules_id: int, enum_modules: EnumModulesUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    db_enum_modules = crud_enum_modules.get_enum_modules(db, enum_modules_id=enum_modules_id)
-    if db_enum_modules is None:
-        raise HTTPException(status_code=404, detail="Enum Analysis not found")
-    return crud_enum_modules.update_enum_modules(db, db_enum_modules=db_enum_modules, enum_modules_update=enum_modules)
 
 @router.delete("/{enum_modules_id}", response_model=EnumModules)
 def delete_enum_modules(enum_modules_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

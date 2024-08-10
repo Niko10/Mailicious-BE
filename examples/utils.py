@@ -69,6 +69,19 @@ def create_module(headers, name, description, enabled):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
+def update_module(headers, id, name=None, description=None, enabled=None):
+    url = f"{BASE_URL}/enum_modules/update/"
+    payload = {'id': id}
+    if name:
+        payload['name'] = name
+    if description:
+        payload['description'] = description
+    if enabled is not None:
+        payload['enabled'] = enabled
+    print("[DEBUG] utils update_module payload: ", payload)
+    response = requests.post(url, json=payload, headers=headers)
+    return response.json()
+
 def create_email_analysis(headers, email_id, analysis_id, verdict_id):
     url = f"{BASE_URL}/analysis/"
     payload = {

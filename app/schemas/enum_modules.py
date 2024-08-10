@@ -1,14 +1,16 @@
 from pydantic import BaseModel
+from typing import Optional
 
 class EnumModulesBase(BaseModel):
-    name: str
-    description: str
-    enabled: bool
+    name: Optional[str] = None
+    description: Optional[str] = None
+    enabled: Optional[bool] = True
 
 class EnumModulesCreate(EnumModulesBase):
     pass
 
 class EnumModulesUpdate(EnumModulesBase):
+    id: int
     pass
 
 class EnumModulesInDBBase(EnumModulesBase):

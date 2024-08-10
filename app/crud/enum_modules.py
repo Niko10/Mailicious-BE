@@ -15,12 +15,19 @@ def create_enum_modules(db: Session, enum_modules: EnumModulesCreate):
     db.refresh(db_enum_modules)
     return db_enum_modules
 
-def update_enum_modules(db: Session, db_enum_modules: EnumModules, enum_modules_update: EnumModulesUpdate):
-    for var, value in vars(enum_modules_update).items():
-        setattr(db_enum_modules, var, value) if value else None
+def update_enum_module(db: Session, enum_module: EnumModulesUpdate):
+    current_module = db.query(EnumModules).filter(EnumModules.id == enum_module.id).first()
+    if not current_module:
+        return None
+    
+    for var, value in vars(enum_module).items():
+        if var != "id" and value is not None:
+            setattr(current_module, var, value)
+    
     db.commit()
-    db.refresh(db_enum_modules)
-    return db_enum_modules
+    db.refresh(current_module)
+    
+    return current_module
 
 def delete_enum_modules(db: Session, enum_modules_id: int):
     db_enum_modules = db.query(EnumModules).filter(EnumModules.id == enum_modules_id).first()

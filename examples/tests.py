@@ -494,8 +494,40 @@ def test_get_email_decision():
     print("for email_id:", email_id, "Decision:", "Block" if decision else "Allow")
     return decision
 
+def test_update_module():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    modules = get_all_analysis_types(headers)
+    print("---------------Debugging-------------------")
+    print("All Modules before update:")
+    for module in modules:
+        print(module)
+    
+    print("Before update: 2nd module.enabled: " , modules[1]['enabled'])
+    module_id = modules[1]['id']
+    enabled = not modules[1]['enabled']
+    print("Updating module - ", module_id, enabled)
+    module_response = update_module(headers, id=module_id, enabled=enabled)
+    print("Update Module Response:", module_response)
+    if module_response.get("id") and module_response.get("enabled") == enabled:
+        print("[V] Module updated successfully")
+    
+    print("All Modules after update:")
+    modules = get_all_analysis_types(headers)
+    for module in modules:
+        print(module)
+    
+    print("Reverting back to original state")
+    enabled = not enabled
+    print("Updating module - ", module_id, enabled)
+    module_response = update_module(headers, id=module_id, enabled=enabled)
+    print("Update Module Response:", module_response)
+    if module_response.get("id") and module_response.get("enabled") == enabled:
+        print("[V] Module updated successfully")
+
+    print("---------------Debugging-------------------\n")
+
 if __name__ == "__main__":
-    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14
+    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15
     print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
@@ -511,7 +543,8 @@ if __name__ == "__main__":
                 create_and_update_and_get_bulk_actions_test, # 11
                 read_all_enums, # 12
                 test_get_email_decision, # 13
-                test_update_actions_bulk # 14
+                test_update_actions_bulk, # 14
+                test_update_module # 15
                 ]
     
     if not tests:
