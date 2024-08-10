@@ -34,6 +34,8 @@ class EmailBase(BaseModel):
     attachments: Optional[str] = Field(default="")
     SPF_IPs: Optional[str] = Field(default="")
     SPF_status: Optional[str] = Field(default="")
+    block: Optional[bool] = False
+    alert: Optional[bool] = False
 
     @validator('subject', 'content', 'attachments', 'SPF_IPs', 'SPF_status', pre=True, always=True)
     def set_empty_string_for_none(cls, v):

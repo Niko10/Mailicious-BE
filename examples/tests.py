@@ -492,6 +492,9 @@ def test_get_email_decision():
     email_id = 2
     decision = get_email_decision(headers, email_id)
     print("for email_id:", email_id, "Decision:", "Block" if decision else "Allow")
+    email_id = 3
+    decision = get_email_decision(headers, email_id)
+    print("for email_id:", email_id, "Decision:", "Block" if decision else "Allow")
     return decision
 
 def test_update_module():

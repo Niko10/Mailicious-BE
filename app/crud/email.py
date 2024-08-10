@@ -38,13 +38,13 @@ def get_email_decision(db: Session, email_id: int):
     
     print("\nDebugging ---------------")
     print("email_id: ", email_id)
-    print("actions: ", actions)
     # Step 2: Get the current email verdicts by modules
     email_verdicts = db.query(Analysis).filter(Analysis.email_id == email_id).all()
     if not email_verdicts:
         raise HTTPException(status_code=404, detail="No verdicts found for the given email ID")
     
-    print("email_verdicts: ", email_verdicts)
+    block_decision = False
+    alert_decision = False
     for verdict in email_verdicts:
         for action in actions:
             if verdict.analysis_id == action.module_id and verdict.verdict_id == action.verdict_id:
@@ -52,11 +52,24 @@ def get_email_decision(db: Session, email_id: int):
                     print(f"for (email_id, verdict_id, module_id) = ({email_id}, {verdict.verdict_id}, {verdict.analysis_id}) block = {action.block}")
                     print(f"for (action_id, verdict_id, module_id) = ({action.id}, {action.verdict_id}, {action.module_id}) block = {action.block}")
                     print("that's why we are blocking the email")
-                    return True  # Block the email
+                    block_decision = True  # Block the email
+                if action.alert:
+                    print(f"for (email_id, verdict_id, module_id) = ({email_id}, {verdict.verdict_id}, {verdict.analysis_id}) alert = {action.alert}")
+                    print(f"for (action_id, verdict_id, module_id) = ({action.id}, {action.verdict_id}, {action.module_id}) alert = {action.alert}")
+                    print("that's why we are aleritng the email")
+                    alert_decision = True
 
-    print("that's why we are allowing the email")
+    # update email block and alert correspondingly
+    print("block_decision: ", block_decision)
+    print("alert_decision: ", alert_decision)
+    db_email = db.query(Email).filter(Email.id == email_id).first()
+    db_email.block = block_decision
+    db_email.alert = alert_decision
+    db.commit()
+    db.refresh(db_email)
+
     print("Debugging ---------------\n")
-    return False  # Allow the email
+    return block_decision  # Allow the email
 
 
 def update_final_verdict(db: Session, email_id: int):
