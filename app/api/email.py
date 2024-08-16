@@ -44,3 +44,16 @@ def delete_email(email_id: int, db: Session = Depends(get_db), current_user: Use
     return crud_email.delete_email(db, email_id=email_id)
 
 
+
+@router.get("/get_sender_day_mails_with_link_reputation", response_model=int)
+def get_sender_day_mails_with_link_reputation(sender: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return crud_email.get_sender_day_mails_with_link_reputation(db, sender=sender)
+
+@router.get("/get_sender_day_mails_with_attachment_reputation", response_model=int)
+def get_sender_day_mails_with_attachment_reputation(sender: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return crud_email.get_sender_day_mails_with_attachment_reputation(db, sender=sender)
+    
+@router.get("/sender_domain_reputation", response_model=int)
+
+def sender_domain_reputation(domain: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return crud_email.sender_domain_reputation(db, domain=domain)

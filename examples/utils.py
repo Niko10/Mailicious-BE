@@ -236,6 +236,27 @@ def get_email_decision(headers, email_id):
     response = requests.get(url, headers=headers)
     return response.json()
 
+def get_sender_day_mails_with_link_reputation(headers,sender):
+    url = f"{BASE_URL}/get_sender_day_mails_with_link_reputation"
+    payload = {"sender": sender}
+    response = requests.post(url,json=payload, headers=headers)
+    print(response)
+    return response.json()   
+
+def get_sender_day_mails_with_attachment_reputation(headers,sender):
+    url = f"{BASE_URL}/get_sender_day_mails_with_attachment_reputation"
+    payload = {"sender": sender}
+    response = requests.post(url,json=payload, headers=headers)
+    print(response)
+    return response.json()   
+
+def sender_domain_reputation(headers,domain):
+    url = f"{BASE_URL}/sender_domain_reputation"
+    payload = {"sender_domain": domain}
+    response = requests.post(url,json=payload, headers=headers)
+    print(response.json())
+    return response.json()   
+
 def example_1():
     # Create a user
     user_response = create_user("testuser@example.com", "testpassword", "Test User")
@@ -291,6 +312,8 @@ def example_1():
         # Search emails by time range and sender
         search_time_range_sender = search_emails_by_time_range_and_sender(headers, from_time, to_time, "testuser@example.com")
         print("Search Emails by Time Range and Sender:", search_time_range_sender)
+
+
     else:
         print("Login failed")
 
@@ -337,6 +360,7 @@ def initial_setup_example():
             ("user22@corp.com", "user1@corp.com", "2023-01-02T12:10:00", "This is a test email."),
             ("user11@corp.com", "user3@corp.com", "2023-01-02T12:11:00", "This is a test email."),
             ("user33@corp.com", "user1@corp.com", "2023-01-02T12:15:00", "This is a test email."),
+            ("user@example.com", "user1@corp.com", "2024-08-16T19:15:00", "This is a test. link: http://bit.ly/1234")
         ]
 
         # get all vericts
@@ -400,4 +424,20 @@ def search_examples():
 if __name__ == "__main__":
     # example_1()
     #initial_setup_example()
-    search_examples()
+    #search_examples()
+    # Login and get headers
+    headers = login("demo@example.com", "demo")
+    if headers:
+        print("Login successful")
+
+        # search domain count by sender domain
+        search_recipients = get_sender_day_mails_with_link_reputation(headers,'user@example.com')
+        print("Search count by link sender:", search_recipients)
+
+        # search attachment count by sender domain
+        search_attachment = get_sender_day_mails_with_attachment_reputation(headers,'user@example.com')
+        print("Search count by attachment sender:", search_attachment)
+
+        # search sender link count by sender
+        search_domains = sender_domain_reputation(headers,'corp.com')
+        print("Search count by domain:", search_domains)

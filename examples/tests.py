@@ -529,6 +529,11 @@ def test_update_module():
 
     print("---------------Debugging-------------------\n")
 
+def test_big_data():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+
+
 if __name__ == "__main__":
     # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15
     print("\n\nRunning tests...\n\n")
@@ -547,11 +552,12 @@ if __name__ == "__main__":
                 read_all_enums, # 12
                 test_get_email_decision, # 13
                 test_update_actions_bulk, # 14
-                test_update_module # 15
+                test_update_module, # 15
+                test_big_data # 16
                 ]
     
     if not tests:
-        tests = ['1', '4', '6', '8', '11']
+        tests = ['1', '4', '6', '8', '11','16']
 
     for test in tests:
         if test.isdigit():

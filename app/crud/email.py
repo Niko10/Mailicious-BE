@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func, distinct
 from app.models.email import Email
 from app.models.analysis import Analysis
 from app.models.actions import Actions
@@ -108,3 +109,63 @@ def update_final_verdict(db: Session, email_id: int):
     
     return True
     
+
+def get_sender_day_mails_with_link_reputation(sender: str, db: Session):
+
+    today = datetime.now().date()
+
+    try:
+        # Query to count distinct receivers for mails with links sent today by the specified sender
+        count = (
+            db.query(func.count(distinct(Email.recipients)))
+            .filter(
+                Email.sender == sender,
+                func.date(Email.email_datetime) >= today,  # Compare only the date part
+                Email.content.op('~')("(https{0,1}\:\/\/\S+|www\.\S+|\S+\.com)[^\w]") 
+            )
+            .scalar()
+        )
+        return count
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+def get_sender_day_mails_with_attachment_reputation(sender: str, db: Session):
+
+    today = datetime.now().date()
+
+    try:
+        # Query to count distinct receivers for mails with attachments sent today by the specified sender
+        count = (
+            db.query(func.count(distinct(Email.recipients)))
+            .filter(
+                Email.sender == sender,
+                func.date(Email.email_datetime) >= today,  # Compare only the date part
+                func.array_length(Email.attachments, 1) > 0  # Check if attachments array has elements
+            )
+            .scalar()
+        )
+        return count
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+def sender_domain_reputation(domain: str, db: Session):
+    # Calculate the date two weeks ago
+    two_weeks_ago = datetime.now().date() - timedelta(weeks=2)
+
+    try:
+        # Query to count emails from the specified domain in the last two weeks
+        count = (
+            db.query(func.count(Email.id))
+            .filter(
+                Email.sender.like(f"%@{domain}"),  # Match the domain in the sender email
+                Email.date >= two_weeks_ago  # Emails sent in the last two weeks
+            )
+            .scalar()
+        )
+        return count
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
