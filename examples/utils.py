@@ -240,14 +240,14 @@ def get_sender_day_mails_with_link_reputation(headers,sender):
     url = f"{BASE_URL}/get_sender_day_mails_with_link_reputation"
     payload = {"sender": sender}
     response = requests.post(url,json=payload, headers=headers)
-    print(response)
+    print(response.json())
     return response.json()   
 
 def get_sender_day_mails_with_attachment_reputation(headers,sender):
     url = f"{BASE_URL}/get_sender_day_mails_with_attachment_reputation"
     payload = {"sender": sender}
     response = requests.post(url,json=payload, headers=headers)
-    print(response)
+    print(response.json())
     return response.json()   
 
 def sender_domain_reputation(headers,domain):
@@ -431,11 +431,11 @@ if __name__ == "__main__":
         print("Login successful")
 
         # search domain count by sender domain
-        search_recipients = get_sender_day_mails_with_link_reputation(headers,'user@example.com')
+        search_recipients = get_sender_day_mails_with_link_reputation(headers,'user1@corp.com')
         print("Search count by link sender:", search_recipients)
 
         # search attachment count by sender domain
-        search_attachment = get_sender_day_mails_with_attachment_reputation(headers,'user@example.com')
+        search_attachment = get_sender_day_mails_with_attachment_reputation(headers,'user1@corp.com')
         print("Search count by attachment sender:", search_attachment)
 
         # search sender link count by sender

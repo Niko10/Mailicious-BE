@@ -3,7 +3,6 @@ from sqlalchemy import func, distinct
 from app.models.email import Email
 from app.models.analysis import Analysis
 from app.models.actions import Actions
-#from app.schemas.big_data import  SenderLinkReputationRequest,SenderAttachmentReputationRequest,DomainReputationRequest,ReputationResponse
 from fastapi import HTTPException
 from datetime import datetime, timedelta
 
@@ -17,6 +16,7 @@ def get_sender_day_mails_with_link_reputation(
         if request.get("sender"):
             count_result  = (
                 db.query(func.count(distinct(Email.recipients)))
+                
                 .filter(
                     Email.content.op('REGEXP')(link_regex),  # Use REGEXP for regex matching
                     Email.sender == request["sender"],
