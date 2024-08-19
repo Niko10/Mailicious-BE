@@ -40,6 +40,15 @@ def search_emails(db: Session, params: dict):
 
     if params.get("to_time"):
         query = query.filter(Email.email_datetime <= params["to_time"])
+    
+    if params.get("block"):
+        query = query.filter(Email.block == params["block"])
+    
+    if params.get("alert"):
+        query = query.filter(Email.alert == params["alert"])
+    
+    if params.get("email_id"):
+        query = query.filter(Email.id == params["email_id"])
 
     print(f"[DEBUG] {debug_msg_current} Final Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
@@ -170,8 +179,8 @@ def group_by_options(db: Session):
         print(field)
         options.append(field)
     
-    for removed in ['verdict', 'final_verdict', 'text']:
+    for removed in ['verdict', 'final_verdict', 'text', 'email_id']:
         options.remove(removed)
-        
+
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} group_by_options - Columns: ", options)
     return options
