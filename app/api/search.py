@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Any
 from app.schemas.email import Email, EmailSearchResult, EmailInDBBase
-from app.schemas.search import EmailSearchParams, VerdictSearchParams, IntegratedEmailSearchParams
-from app.crud.search import search_emails, search_by_verdict, search_emails_by_text
+from app.schemas.search import EmailSearchParams, VerdictSearchParams, IntegratedEmailSearchParams, GroupBySearch
+from app.crud.search import search_emails, search_by_verdict, search_emails_by_text, group_by_search_emails, group_by_options
 from app.db.database import get_db
 from app.api.auth import get_current_user
 from app.schemas.user import User
@@ -27,6 +27,18 @@ def search_verdict(params: VerdictSearchParams, db: Session = Depends(get_db), c
 def search_by_text(text: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     results = search_emails_by_text(db=db, text=text)
     return results
+
+@router.get("/search/group/meta")
+def group_by(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    return group_by_options(db=db)
+
+
+@router.post("/search/group", response_model=Any)
+def group_by(params: GroupBySearch, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    results = group_by_search_emails(db=db, params=params.dict())
+    return results
+
+
 
 @router.post("/search/", response_model=List[EmailSearchResult])
 def search_advanced(params: IntegratedEmailSearchParams, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

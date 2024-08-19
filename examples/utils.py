@@ -157,6 +157,17 @@ def search_emails_by_time_range_and_sender(headers, from_time, to_time, sender):
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
 
+def group_by_search_emails(headers, params):
+    url = f"{BASE_URL}/search/group"
+    print("[DEBUG] utils group_by_search_emails params: ", params)
+    response = requests.post(url, json=params, headers=headers)
+    return response.json()
+
+def get_group_by_meta(headers):
+    url = f"{BASE_URL}/search/group/meta"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 def get_current_user(headers):
     url = f"{BASE_URL}/users/me"
     response = requests.get(url, headers=headers)

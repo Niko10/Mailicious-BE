@@ -22,5 +22,10 @@ class IntegratedEmailSearchParams(BaseModel):
     to_time: Optional[datetime] = None
     text: Optional[str] = None
     verdict: Optional[list[str]] = None
+    block: Optional[bool] = None
+    alert: Optional[bool] = None
     final_verdict: Optional[list[str]] = None
+
+class GroupBySearch(IntegratedEmailSearchParams):
+    group_by_fields: Optional[str] = None
     

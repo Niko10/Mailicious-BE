@@ -256,6 +256,27 @@ def advanced_search_test():
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
 
+def test_group_by_search_test():
+    # Login
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    # Get meta data
+    print("Getting group by meta data...")
+    group_by_meta = get_group_by_meta(headers)
+    print("Group by Meta Data:", group_by_meta)
+    
+    # first without conditions and one group
+    print("Group by sender...")
+    group_by_fields = {"group_by_fields": "sender"}
+    search_response = group_by_search_emails(headers, group_by_fields)
+    print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
+    
+    print("Group by subject and filter by sender...")
+    group_by_fields = {"group_by_fields": "subject", "sender": ["user1@corp.com"]}
+    search_response = group_by_search_emails(headers, group_by_fields)
+    print("[DEBUG] Search Response 2:\n", json.dumps(search_response, indent=4))
+    
+
 def create_fields_enum_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
     fields = ["domain", "subject", "SPF_IP", "country"]
@@ -547,7 +568,8 @@ if __name__ == "__main__":
                 read_all_enums, # 12
                 test_get_email_decision, # 13
                 test_update_actions_bulk, # 14
-                test_update_module # 15
+                test_update_module, # 15
+                test_group_by_search_test # 16
                 ]
     
     if not tests:
