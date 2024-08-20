@@ -36,16 +36,20 @@ def get_email_decision(db: Session, email_id: int):
     if not actions:
         raise HTTPException(status_code=404, detail="No action configurations found")
     
-    print("\nDebugging ---------------")
-    print("email_id: ", email_id)
+    print("\nDebuggin get_email_decision ---------------")
+    print("received email_id: ", email_id)
+    print("received email_id type: ", type(email_id))
     # Step 2: Get the current email verdicts by modules
     email_verdicts = db.query(Analysis).filter(Analysis.email_id == email_id).all()
     if not email_verdicts:
+        print("No verdicts found for the given email ID")
         raise HTTPException(status_code=404, detail="No verdicts found for the given email ID")
     
+    print("email_verdicts: ", email_verdicts)
     block_decision = False
     alert_decision = False
     for verdict in email_verdicts:
+        print("iterating verdict: ")
         for action in actions:
             if verdict.analysis_id == action.module_id and verdict.verdict_id == action.verdict_id:
                 if action.block:
@@ -63,6 +67,7 @@ def get_email_decision(db: Session, email_id: int):
     print("block_decision: ", block_decision)
     print("alert_decision: ", alert_decision)
     db_email = db.query(Email).filter(Email.id == email_id).first()
+    print("db_email: ", db_email.__dict__)
     db_email.block = block_decision
     db_email.alert = alert_decision
     db.commit()
