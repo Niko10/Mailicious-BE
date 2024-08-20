@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import user, auth, email, enum_modules, enum_verdicts, search, analysis, enum_fields, blacklist, actions
+from app.api import user, big_data, auth, email, enum_modules, enum_verdicts, search, analysis, enum_fields, blacklist, actions
 from app.db.database import engine, Base
 from fastapi.middleware.cors import CORSMiddleware
 
