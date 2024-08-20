@@ -252,7 +252,7 @@ def advanced_search_test():
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
                                                   block = 1,
-                                                  id=1,
+                                                  id=[1,2],
                                                    #sender=["user1", "ori"],
                                                    #recipients=["test", "user2@"],
                                                    #text="Test",
