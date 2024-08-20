@@ -25,10 +25,9 @@ def update_actions_bulk(db: Session, actions: List[ActionRead]):
         print("db_action to update: ", db_action.__dict__)
         for var, value in vars(action).items():
             print(f"{var} = {value}")
-            setattr(db_action, var, value) if value else None
+            setattr(db_action, var, value) if value is not None else None
             
         db.commit()
-        print("db_action: ", db_action.__dict__)
         db.refresh(db_action)
 
     new_actions = db.query(Actions).all()
