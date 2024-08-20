@@ -19,6 +19,7 @@ app.include_router(search.router, tags=["search"])
 app.include_router(enum_fields.router, prefix="/fields_enum", tags=["fields_enum"])
 app.include_router(blacklist.router, prefix="/blacklist", tags=["blacklist"])
 app.include_router(actions.router, prefix="/actions", tags=["actions"])
+app.include_router(big_data.router, tags=["big_data"])
 
 
 @app.get("/")
