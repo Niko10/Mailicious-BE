@@ -16,6 +16,8 @@ def create_enum_modules(db: Session, enum_modules: EnumModulesCreate):
     return db_enum_modules
 
 def update_enum_module(db: Session, enum_module: EnumModulesUpdate):
+    print("[DEBUG] ---------------")
+    print("enum_module: ", enum_module.__dict__)
     current_module = db.query(EnumModules).filter(EnumModules.id == enum_module.id).first()
     if not current_module:
         return None

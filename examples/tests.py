@@ -558,6 +558,36 @@ def test_update_module():
 
     print("---------------Debugging-------------------\n")
 
+def test_update_bulk_module():
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    modules = get_all_analysis_types(headers)
+    print("---------------Debugging-------------------")
+    print("All Modules before update:")
+    for module in modules:
+        print(module)
+
+    print("Before update: 1st module.enabled: " , modules[0]['enabled'])
+    module_id_0 = modules[0]['id']
+    module_id_0_new_status = not modules[0]['enabled']
+
+    print("Before update: 2nd module.enabled: " , modules[0]['enabled'])
+    module_id_1 = modules[1]['id']
+    module_id_0_new_status = not modules[1]['enabled']
+
+    modules_updated = [
+        {"id": module_id_0, "enabled": module_id_0_new_status},
+        {"id": module_id_1, "enabled": module_id_0_new_status}
+    ]
+
+    update_modules_bulk(headers, modules_updated)
+    print("All Modules after update:")
+    modules = get_all_analysis_types(headers)
+    for module in modules:
+        print(module)
+    
+
+
+
 if __name__ == "__main__":
     # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15
     print("\n\nRunning tests...\n\n")
@@ -577,7 +607,8 @@ if __name__ == "__main__":
                 test_get_email_decision, # 13
                 test_update_actions_bulk, # 14
                 test_update_module, # 15
-                test_group_by_search_test # 16
+                test_group_by_search_test,# 16
+                test_update_bulk_module # 17
                 ]
     
     if not tests:

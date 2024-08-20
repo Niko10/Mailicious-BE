@@ -9,9 +9,16 @@ from app.schemas.user import User
 
 router = APIRouter()
 
-@router.post("/update/", response_model=EnumModules)
-def update_enum_modules(module: EnumModulesUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    return crud_enum_modules.update_enum_module(db, module)
+# @router.post("/update/single", response_model=EnumModules)
+# def update_enum_modules(module: EnumModulesUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+#     return crud_enum_modules.update_enum_module(db, module)
+
+@router.post("/update/multi", response_model=List[EnumModules])
+def update_enum_modules(modules: List[EnumModulesUpdate], db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    print("HEREEEEEEEEE")
+    for module in modules:
+        crud_enum_modules.update_enum_module(db, module)
+    return crud_enum_modules.get_enum_analyses(db)
 
 @router.post("/", response_model=EnumModules)
 def create_enum_modules(enum_modules: EnumModulesCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):

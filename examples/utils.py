@@ -70,7 +70,7 @@ def create_module(headers, name, description, enabled):
     return response.json()
 
 def update_module(headers, id, name=None, description=None, enabled=None):
-    url = f"{BASE_URL}/enum_modules/update/"
+    url = f"{BASE_URL}/enum_modules/update/single"
     payload = {'id': id}
     if name:
         payload['name'] = name
@@ -80,6 +80,11 @@ def update_module(headers, id, name=None, description=None, enabled=None):
         payload['enabled'] = enabled
     print("[DEBUG] utils update_module payload: ", payload)
     response = requests.post(url, json=payload, headers=headers)
+    return response.json()
+
+def update_modules_bulk(headers, modules):
+    url = f"{BASE_URL}/enum_modules/update/multi"
+    response = requests.post(url, json=modules, headers=headers)
     return response.json()
 
 def create_email_analysis(headers, email_id, analysis_id, verdict_id):
