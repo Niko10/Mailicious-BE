@@ -50,7 +50,7 @@ def test_create_analysis(headers, email_id, analysis_id, verdict_id):
 
 def test_search_emails_advanced(headers, sender=None, recipients=None, 
                                 content=None, subject=None, from_time=None, 
-                                to_time=None, text=None, verdict_id=None, analysis_id=None, final_verdict=None, block=None, alert=None, email_id=None):
+                                to_time=None, text=None, verdict_id=None, analysis_id=None, final_verdict=None, block=None, alert=None, id=None):
     search_params = {}
     if sender:
         search_params["sender"] = sender
@@ -68,8 +68,8 @@ def test_search_emails_advanced(headers, sender=None, recipients=None,
         search_params["block"] = block
     if alert:
         search_params["alert"] = alert
-    if email_id:
-        search_params["email_id"] = email_id
+    if id:
+        search_params["id"] = id
     if text:
         search_params["text"] = text
     if verdict_id != None:
@@ -252,7 +252,7 @@ def advanced_search_test():
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
                                                   block = 1,
-                                                  email_id=1,
+                                                  id=1,
                                                    #sender=["user1", "ori"],
                                                    #recipients=["test", "user2@"],
                                                    #text="Test",

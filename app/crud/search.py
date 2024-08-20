@@ -47,8 +47,8 @@ def search_emails(db: Session, params: dict):
     if params.get("alert"):
         query = query.filter(Email.alert == params["alert"])
     
-    if params.get("email_id"):
-        query = query.filter(Email.id == params["email_id"])
+    if params.get("id"):
+        query = query.filter(Email.id == params["id"])
 
     print(f"[DEBUG] {debug_msg_current} Final Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
