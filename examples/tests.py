@@ -156,7 +156,8 @@ def create_verdicts_enums(headers):
     print("-------------------\n")
 
 def create_modules_enum(headers):
-    modules = [("Final Verdict", "Detect by final verdict", True), ("External Data Sources", "Detect by External Data Sources", True), ("Blacklist", "Detect by blacklist", True)]
+    modules = [("Final Verdict", "Detect by final verdict", True), ("ExternalDataSources", "Detect by External Data Sources", True), ("BlackList", "Detect by blacklist", True)
+               ("BigData", "Detect by Big Data", True), ("HebrewMailClassifier", "Detect by HebrewMailClassifier", True), ("Forensics", "Detect by Forensics", True)]
     for name, description, enabled in modules:
         modules = create_module(headers, name, description, enabled)
         print("Create Module Response:", modules)
