@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import List, Any
 from app.schemas.email import Email, EmailSearchResult, EmailInDBBase
 from app.schemas.search import EmailSearchParams, VerdictSearchParams, IntegratedEmailSearchParams, GroupBySearch
-from app.crud.search import search_emails, search_by_verdict, search_emails_by_text, group_by_search_emails, group_by_options
+from app.crud.search import search_emails, search_by_verdict, search_emails_by_text, create_group_by_search_emails, group_by_options, delete_group_by_search_emails, get_all_group_by_search_emails
 from app.db.database import get_db
 from app.api.auth import get_current_user
 from app.schemas.user import User
@@ -32,11 +32,24 @@ def search_by_text(text: str, db: Session = Depends(get_db), current_user: User 
 def group_by(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return group_by_options(db=db)
 
+@router.get("/search/group/delete/{id}", response_model=Any)
+def delete_group_by(id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} delete_group_by - id: {id}")
+    results = delete_group_by_search_emails(db=db, id=id)
+    return results
+
+@router.get("/search/group/all", response_model=Any)
+def get_all_groups(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_groups")
+    results = get_all_group_by_search_emails(db=db, user_id=current_user.id)
+    return results
 
 @router.post("/search/group", response_model=Any)
 def group_by(params: GroupBySearch, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    results = group_by_search_emails(db=db, params=params.dict())
+    results = create_group_by_search_emails(db=db, params=params.dict(), user_id=current_user.id)
     return results
+
+
 
 
 

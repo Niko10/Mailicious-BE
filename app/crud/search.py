@@ -3,6 +3,8 @@ from sqlalchemy import and_, or_, func
 from app.models.email import Email
 from app.models.analysis import Analysis
 from app.schemas.search import GroupBySearch, IntegratedEmailSearchParams
+from app.schemas.widget import WidgetFull, WidgetCreate, WidgetUpdate
+from app.models.widget import Widget
 import json
 
 DEBUG_MSG_PREFIX = "./app/crud/search.py -"
@@ -83,10 +85,56 @@ def search_emails_by_text(db: Session, text: str):
     print(f"[DEBUG] {debug_msg_current} search_emails_by_text - Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
 
+
+def delete_group_by_search_emails(db: Session, id: int):
+    # delete the widget from the widgets table
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} delete_group_by_search_emails - ID: ", id)
+    db.query(Widget).filter(Widget.id == id).delete()
+    db.commit()
+    return {"message": "Widget deleted successfully."}
+
+def get_all_group_by_search_emails(db: Session, user_id: int):
+    # get all the widgets for the user
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - user_id: ", user_id)
+    widgets = db.query(Widget).filter(Widget.user_id == user_id).all()
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Widgets: ", widgets)
+
+    data = []
+    for widget in widgets:
+        print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Widget ID: ", widget.id)
+        config = json.loads(widget.config)
+        print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Config: ", widget.config)
+        print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Config 2: ", config)
+        result = group_by_search_emails(db=db, params=config)
+        print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Result: ", result)
+        data.append({
+            "id": widget.id,
+            "data": group_by_search_emails(db=db, params=config)
+        })
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Data: ", data)
+    return data
+
+def create_group_by_search_emails(db: Session, params: dict, user_id: int):
+    # save the params to the widgets table
+    print(f"[DEBUG] {DEBUG_MSG_PREFIX} create_group_by_search_emails - user_id: ", user_id, " Params:\n", params)
+    new_widget = Widget(
+        user_id=user_id,
+        config=json.dumps(params)
+    )
+    
+    db.add(new_widget)
+    db.commit()
+    db.refresh(new_widget)
+    new_widget_id = new_widget.id
+    results = group_by_search_emails(db=db, params=params)
+    results["id"] = new_widget_id
+    return results
+    
+
 def group_by_search_emails(db: Session, params: dict):
+    # process the params and return data
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} group_by_search_emails - Params:\n", params)
     debug_msg_current = f"{DEBUG_MSG_PREFIX} group_by_search_emails"
-
     query = db.query(Email)
     
     first = True
@@ -181,7 +229,8 @@ def group_by_options(db: Session):
         options.append(field)
     
     for removed in ['verdict', 'final_verdict', 'text', 'email_id']:
-        options.remove(removed)
+        if removed in options:
+            options.remove(removed)
 
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} group_by_options - Columns: ", options)
     return options

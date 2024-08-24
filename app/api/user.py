@@ -23,6 +23,13 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Email already registered")
     return crud_user.create_user(db=db, user=user)
 
+@router.get("/delete/{user_id}", response_model=User)
+def delete_user(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    db_user = crud_user.get_user(db, user_id=user_id)
+    if db_user is None:
+        raise HTTPException(status_code=404, detail="User not found")
+    return crud_user.delete_user(db, user_id=user_id)
+
 @router.get("/{user_id}", response_model=User)
 def read_user(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     db_user = crud_user.get_user(db, user_id=user_id)
@@ -42,11 +49,6 @@ def update_user(user_id: int, user: UserUpdate, db: Session = Depends(get_db), c
         raise HTTPException(status_code=404, detail="User not found")
     return crud_user.update_user(db, db_user=db_user, user_update=user)
 
-@router.delete("/{user_id}", response_model=User)
-def delete_user(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    db_user = crud_user.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return crud_user.delete_user(db, user_id=user_id)
+
 
 

@@ -156,8 +156,15 @@ def create_verdicts_enums(headers):
     print("-------------------\n")
 
 def create_modules_enum(headers):
-    modules = [("Final Verdict", "Detect by final verdict", True), ("ExternalDataSources", "Detect by External Data Sources", True), ("BlackList", "Detect by blacklist", True)
-               ("BigData", "Detect by Big Data", True), ("HebrewMailClassifier", "Detect by HebrewMailClassifier", True), ("Forensics", "Detect by Forensics", True)]
+    modules = [
+        ("Final Verdict", "Detect by final verdict", True),
+        ("ExternalDataSources", "Detect by External Data Sources", True),
+        ("BlackList", "Detect by blacklist", True),
+        ("BigData", "Detect by Big Data", True),
+        ("HebrewMailClassifier", "Detect by HebrewMailClassifier", True),
+        ("Forensics", "Detect by Forensics", True)
+    ]
+
     for name, description, enabled in modules:
         modules = create_module(headers, name, description, enabled)
         print("Create Module Response:", modules)
@@ -281,10 +288,39 @@ def test_group_by_search_test():
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
     
     print("Group by subject and filter by sender...")
-    group_by_fields = {"group_by_fields": "subject", "sender": ["user1@corp.com"]}
+    group_by_fields = {"group_by_fields": "subject,sender", "content": ["Test"]}
     search_response = group_by_search_emails(headers, group_by_fields)
     print("[DEBUG] Search Response 2:\n", json.dumps(search_response, indent=4))
     
+def test_delete_group_by_search_emails():
+    # Login
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    # Get meta data
+    print("Getting group by meta data...")
+    group_by_meta = get_group_by_meta(headers)
+    print("Group by Meta Data:", group_by_meta)
+
+    # create group by
+    print("Group by sender...")
+    group_by_fields = {"group_by_fields": "sender"}
+    search_response = group_by_search_emails(headers, group_by_fields)
+    print("[DEBUG] Search Response:\n", json.dumps(search_response, indent=4))
+
+    # delete group by the created id
+    group_by_id = search_response.get("id")
+    print("Deleting group by id:", group_by_id)
+    delete_group_by_search_emails(headers, group_by_id)
+
+def test_get_all_group_by_search_emails():
+    # Login
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+
+    # Get meta data
+    print("Getting all group by search emails...")
+    group_by_search_emails = get_all_group_by_search_emails(headers)
+    print("All Group By Search Emails:", group_by_search_emails)
+
 
 def create_fields_enum_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
@@ -586,11 +622,18 @@ def test_update_bulk_module():
     for module in modules:
         print(module)
     
+def test_get_all_users():
+    print("-------------------\n")
+    print("Getting all users...")
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    users = get_all_users(headers)
+    print("All Users:", users)
+    print("-------------------\n")
 
 
 
 if __name__ == "__main__":
-    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15
+    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15 16 17 18 19
     print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
@@ -608,8 +651,11 @@ if __name__ == "__main__":
                 test_get_email_decision, # 13
                 test_update_actions_bulk, # 14
                 test_update_module, # 15
-                test_group_by_search_test,# 16
-                test_update_bulk_module # 17
+                test_group_by_search_test, # 16
+                test_update_bulk_module, # 17
+                test_delete_group_by_search_emails, # 18
+                test_get_all_group_by_search_emails, # 19
+                test_get_all_users # 20
                 ]
     
     if not tests:
@@ -635,3 +681,7 @@ if __name__ == "__main__":
     
 # on module 1, verdict 2 - block
 # on module 2, verdict 2 - alert
+
+
+
+

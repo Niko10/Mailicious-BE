@@ -168,6 +168,16 @@ def group_by_search_emails(headers, params):
     response = requests.post(url, json=params, headers=headers)
     return response.json()
 
+def get_all_group_by_search_emails(headers):
+    url = f"{BASE_URL}/search/group/all"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+def delete_group_by_search_emails(headers, id):
+    url = f"{BASE_URL}/search/group/delete/{id}"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
 def get_group_by_meta(headers):
     url = f"{BASE_URL}/search/group/meta"
     response = requests.get(url, headers=headers)
@@ -175,6 +185,11 @@ def get_group_by_meta(headers):
 
 def get_current_user(headers):
     url = f"{BASE_URL}/users/me"
+    response = requests.get(url, headers=headers)
+    return response.json()
+
+def get_all_users(headers):
+    url = f"{BASE_URL}/users/"
     response = requests.get(url, headers=headers)
     return response.json()
 

@@ -31,6 +31,7 @@ def update_user(db: Session, db_user: User, user_update: UserUpdate):
 
 def delete_user(db: Session, user_id: int):
     db_user = db.query(User).filter(User.id == user_id).first()
-    db.delete(db_user)
+    db_user.is_active = False
     db.commit()
+    db.refresh(db_user)
     return db_user
