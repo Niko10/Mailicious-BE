@@ -193,6 +193,16 @@ def get_all_users(headers):
     response = requests.get(url, headers=headers)
     return response.json()
 
+def reset_password(headers, old_password, new_password):
+    url = f"{BASE_URL}/users/reset"
+    payload = {
+        "old_password": old_password,
+        "new_password": new_password
+    }
+    response = requests.post(url, json=payload, headers=headers)
+    return response.json()
+
+
 def search_advanced(params, headers):
     url = f"{BASE_URL}/search/"
     response = requests.post(url, json=params, headers=headers)

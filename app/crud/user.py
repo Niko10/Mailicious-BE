@@ -35,3 +35,18 @@ def delete_user(db: Session, user_id: int):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+def reset_password(db: Session, user_id: int, new_password: str, old_password: str):
+    old_password_hash = get_password_hash(old_password)
+    # search for the user by id and password
+    db_user = db.query(User).filter(User.id == user_id, User.hashed_password == old_password_hash).first()
+    if not db_user:
+        print("[DEBUG] User not found")
+        return None
+
+    # update the password
+    db_user.hashed_password = get_password_hash(new_password)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+    

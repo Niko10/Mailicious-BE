@@ -23,3 +23,7 @@ class User(UserInDBBase):
 
 class UserInDB(UserInDBBase):
     hashed_password: str
+
+class ResetPassowrd(BaseModel):
+    old_password: str
+    new_password: str

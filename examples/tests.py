@@ -630,10 +630,16 @@ def test_get_all_users():
     print("All Users:", users)
     print("-------------------\n")
 
-
+def test_reset_password():
+    print("-------------------\n")
+    print("Resetting password...")
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    result = reset_password(headers, "demo", "demo")
+    print("Reset Password Response:", result)
+    print("-------------------\n")
 
 if __name__ == "__main__":
-    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15 16 17 18 19
+    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15 16 17 18 19 20 21
     print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
@@ -655,7 +661,8 @@ if __name__ == "__main__":
                 test_update_bulk_module, # 17
                 test_delete_group_by_search_emails, # 18
                 test_get_all_group_by_search_emails, # 19
-                test_get_all_users # 20
+                test_get_all_users, # 20
+                test_reset_password # 21
                 ]
     
     if not tests:
