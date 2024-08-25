@@ -345,6 +345,20 @@ def get_fields_enum_test():
         print("[X] Failed to fetch all fields")
     print("-------------------\n")
 
+def test_create_blacklist_bulk():
+    print("-------------------\n")
+    headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
+    print("Creating blacklist bulk...")
+    fields = get_fields_enums(headers)
+
+    blacklists = [
+        {"field_id": fields[0]['id'], "value": "example.com"},
+        {"field_id": fields[0]['id'], "value": "some.com"},
+    ]
+
+    results = create_blacklist_bulk(headers, blacklists)
+    print("Create Blacklist Bulk Response:", results)
+    print("-------------------\n")
 
 def create_blacklist_items_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
@@ -662,7 +676,8 @@ if __name__ == "__main__":
                 test_delete_group_by_search_emails, # 18
                 test_get_all_group_by_search_emails, # 19
                 test_get_all_users, # 20
-                test_reset_password # 21
+                test_reset_password, # 21
+                test_create_blacklist_bulk, # 22
                 ]
     
     if not tests:

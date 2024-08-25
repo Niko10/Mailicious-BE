@@ -13,7 +13,7 @@ def read_blacklists(skip: int = 0, limit: int = 10, db: Session = Depends(get_db
     blacklists = get_blacklists(db, skip=skip, limit=limit)
     return blacklists
 
-@router.post("/add/multi", response_model=Blacklist)
+@router.post("/add/multi", response_model=List[Blacklist])
 def create_blacklist(blacklist: List[BlacklistCreate], db: Session = Depends(get_db)):
     for item in blacklist:
         create_blacklist_item(db=db, blacklist=item)

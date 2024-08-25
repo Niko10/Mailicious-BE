@@ -225,6 +225,10 @@ def get_fields_enums(headers, skip=0, limit=10):
     response = requests.get(url, headers=headers)
     return response.json()
         
+def create_blacklist_bulk(headers, blacklists):
+    url = f"{BASE_URL}/blacklist/add/multi"
+    response = requests.post(url, json=blacklists, headers=headers)
+    return response.json()
 
 def create_blacklist(headers, field_id, value):
     url = f"{BASE_URL}/blacklist/add"
