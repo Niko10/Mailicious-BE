@@ -8,3 +8,5 @@ class Widget(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey('users.id'))
     config = Column(String)
+    name = Column(String)
+    type = Column(String)

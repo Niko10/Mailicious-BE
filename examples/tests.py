@@ -186,12 +186,12 @@ def initial_setup():
     
     # create emails for example
     emails = [
-        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", [(2,2), (3,2)]),
-        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", [(2,3), (3,1)]),
-        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(2,1), (3,2)]),
-        ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(2,2), (3,2)]),
-        ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", "SPF_IP1", "SPF_status1", [(2,2), (3,1)]),
-        ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", "SPF_IP1", "SPF_status1", [(2,3), (3,1)]),
+        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,1),(3,1), (4,1), (5,1), (6,1)]),
+        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", [(1,2),(2,2),(3,2), (4,2), (5,2), (6,2)]),
+        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,3),(2,2),(3,3), (4,2), (5,3), (6,3)]),
+        ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,2),(2,1),(3,2), (4,1), (5,2), (6,1)]),
+        ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,1),(3,1), (4,1), (5,1), (6,2)]),
+        ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,3),(3,1), (4,1), (5,1), (6,1)]),
     ]
 
     # get all vericts
@@ -206,7 +206,7 @@ def initial_setup():
     # get all modules
     analysis_types = get_all_analysis_types(headers)
     print("All Modules:", analysis_types)
-    if len(analysis_types) == 3:
+    if len(analysis_types) == 6:
         print("[V] All Modules fetched successfully")
         
     else:
@@ -283,12 +283,12 @@ def test_group_by_search_test():
     
     # first without conditions and one group
     print("Group by sender...")
-    group_by_fields = {"group_by_fields": "sender"}
+    group_by_fields = {"group_by_fields": "sender", "name": "Group by sender", "type": "pie"}
     search_response = group_by_search_emails(headers, group_by_fields)
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
     
     print("Group by subject and filter by sender...")
-    group_by_fields = {"group_by_fields": "subject,sender", "content": ["Test"]}
+    group_by_fields = {"group_by_fields": "subject,sender", "content": ["Test"], "name": "Group by subject and filter by sender", "type": "pie"}
     search_response = group_by_search_emails(headers, group_by_fields)
     print("[DEBUG] Search Response 2:\n", json.dumps(search_response, indent=4))
     
@@ -653,7 +653,7 @@ def test_reset_password():
     print("-------------------\n")
 
 if __name__ == "__main__":
-    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15 16 17 18 19 20 21
+    # Defult to setup - 1 4 6 8 11 2 3 5 7 9 10 12 13 14 15 16 17 18 19 20 21 22
     print("\n\nRunning tests...\n\n")
     tests = sys.argv[1:]
     tests_map = [initial_setup, # 1
@@ -681,7 +681,9 @@ if __name__ == "__main__":
                 ]
     
     if not tests:
-        tests = ['1', '4', '6', '8', '11']
+        tests = input("Enter test numbers to run: ").split()
+        tests = [test for test in tests if test.isdigit()]
+        #tests = ['1', '4', '6', '8', '11']
 
     for test in tests:
         if test.isdigit():

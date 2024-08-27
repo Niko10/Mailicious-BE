@@ -109,7 +109,9 @@ def get_all_group_by_search_emails(db: Session, user_id: int):
         print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Result: ", result)
         data.append({
             "id": widget.id,
-            "data": group_by_search_emails(db=db, params=config)
+            "data": group_by_search_emails(db=db, params=config),
+            "name": widget.name,
+            "type": widget.type
         })
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} get_all_group_by_search_emails - Data: ", data)
     return data
@@ -119,15 +121,20 @@ def create_group_by_search_emails(db: Session, params: dict, user_id: int):
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} create_group_by_search_emails - user_id: ", user_id, " Params:\n", params)
     new_widget = Widget(
         user_id=user_id,
-        config=json.dumps(params)
+        config=json.dumps(params),
+        name=params["name"],
+        type=params["type"]
     )
     
     db.add(new_widget)
     db.commit()
     db.refresh(new_widget)
     new_widget_id = new_widget.id
-    results = group_by_search_emails(db=db, params=params)
+    results = {}
+    results["data"] = group_by_search_emails(db=db, params=params)
     results["id"] = new_widget_id
+    results["name"] = params["name"]
+    results["type"] = params["type"]
     return results
     
 

@@ -29,4 +29,6 @@ class IntegratedEmailSearchParams(BaseModel):
 
 class GroupBySearch(IntegratedEmailSearchParams):
     group_by_fields: Optional[str] = None
+    name: Optional[str] = ""
+    type: Optional[str] = ""
     
