@@ -235,7 +235,7 @@ def group_by_options(db: Session):
         print(field)
         options.append(field)
     
-    for removed in ['verdict', 'final_verdict', 'text', 'email_id']:
+    for removed in ['verdict', 'final_verdict', 'text', 'email_id', 'name', 'type']:
         if removed in options:
             options.remove(removed)
 
