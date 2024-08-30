@@ -77,6 +77,8 @@ class EmailSearchResult(EmailInDBBase):
     def transform_analyses(self, analyses: List[Dict]) -> Dict[str, str]:
         transformed_analyses = {}
         for analysis in analyses:
+            if analysis['analysis']['name'] == 'Final Verdict':
+                continue
             transformed_analyses[analysis['analysis']['name']] = analysis['verdict']['name']
         return transformed_analyses
     
