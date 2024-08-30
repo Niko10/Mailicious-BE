@@ -64,9 +64,9 @@ def test_search_emails_advanced(headers, sender=None, recipients=None,
         search_params["from_time"] = from_time
     if to_time:
         search_params["to_time"] = to_time
-    if block:
+    if block != None:
         search_params["block"] = block
-    if alert:
+    if alert != None:
         search_params["alert"] = alert
     if id:
         search_params["id"] = id
@@ -259,14 +259,15 @@ def advanced_search_test():
 
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
-                                                  block = 1,
-                                                  id=[1,2],
+                                                  block = 0,
+                                                  alert= 0,
+                                                  #id=[1,2],
                                                    #sender=["user1", "ori"],
                                                    #recipients=["test", "user2@"],
                                                    #text="Test",
                                                    #sender=["user2@"]
-                                                   #from_time="2024-07-26T19:00",
-                                                   #to_time="2024-08-03T19:00",
+                                                   from_time="2022-07-26T19:00",
+                                                   to_time="2023-10-03T19:00",
                                                    final_verdict = ["Suspicious"]
     )
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))

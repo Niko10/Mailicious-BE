@@ -43,10 +43,12 @@ def search_emails(db: Session, params: dict):
     if params.get("to_time"):
         query = query.filter(Email.email_datetime <= params["to_time"])
     
-    if params.get("block"):
+    if params.get("block") != None:
+        print(f"[DEBUG] {debug_msg_current} Block: ", params["block"])
         query = query.filter(Email.block == params["block"])
     
-    if params.get("alert"):
+    if params.get("alert") != None:
+        print(f"[DEBUG] {debug_msg_current} Alert: ", params["alert"])
         query = query.filter(Email.alert == params["alert"])
     
     if params.get("id"):

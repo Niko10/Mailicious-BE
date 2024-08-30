@@ -3,8 +3,11 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.schemas.user import User, UserCreate, UserUpdate, ResetPassowrd
 from app.crud import user as crud_user
+from app.crud import search as crud_search
+from app.models.widget import Widget
 from app.db.database import get_db
 from app.api.auth import get_current_user
+import json
 
 router = APIRouter()
 
@@ -21,7 +24,29 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     db_user = crud_user.get_user_by_email(db, email=user.email)
     if db_user:
         raise HTTPException(status_code=400, detail="Email already registered")
-    return crud_user.create_user(db=db, user=user)
+    new_user = crud_user.create_user(db=db, user=user)
+
+    # create 2 defaults widgets for the use
+
+    DEFAULT_WIDGETS = [    
+        { "sender": None, "recipients": None, "content": ["Test"], "subject": None, "from_time": None, "to_time": None, "text": None, "verdict": None, "block": True, "alert": None, "final_verdict": None, "group_by_fields": "sender", "name": "Suspicous Sender", "type": "bar"},
+        { "sender": None, "recipients": None, "content": ["Test"], "subject": None, "from_time": "2024-01-01T00:00", "to_time": None, "text": None, "verdict": None, "block": True, "alert": None, "final_verdict": None, "group_by_fields": "sender", "name": "Blocked mail rate in 2024", "type": "pie"}
+    ]
+
+    for params in DEFAULT_WIDGETS:
+        new_widget = Widget(
+            user_id=new_user.id,
+            config=json.dumps(params),
+            name=params["name"],
+            type=params["type"]
+        )
+        db.add(new_widget)
+        db.commit()
+        db.refresh(new_widget)
+        print("[DEBUG] create_user - new_widget: ", new_widget.__dict__)
+    
+    return new_user
+
 
 @router.get("/delete/{user_id}", response_model=User)
 def delete_user(user_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
