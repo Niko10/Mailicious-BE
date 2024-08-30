@@ -13,8 +13,8 @@ class Email(Base):
     subject = Column(String)
     content = Column(String)
     attachments = Column(String)
-    SPF_IPs = Column(String)
-    SPF_status = Column(String)
+    #SPF_IPs = Column(String)
+    #SPF_status = Column(String)
     block = Column(Boolean, default=False)
     alert = Column(Boolean, default=False)
 

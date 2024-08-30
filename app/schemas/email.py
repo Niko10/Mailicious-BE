@@ -32,12 +32,13 @@ class EmailBase(BaseModel):
     subject: Optional[str] = Field(default="")
     content: Optional[str] = Field(default="")
     attachments: Optional[str] = Field(default="")
-    SPF_IPs: Optional[str] = Field(default="")
-    SPF_status: Optional[str] = Field(default="")
+    #SPF_IPs: Optional[str] = Field(default="")
+    #SPF_status: Optional[str] = Field(default="")
     block: Optional[bool] = False
     alert: Optional[bool] = False
 
-    @validator('subject', 'content', 'attachments', 'SPF_IPs', 'SPF_status', pre=True, always=True)
+    #@validator('subject', 'content', 'attachments', 'SPF_IPs', 'SPF_status', pre=True, always=True)
+    @validator('subject', 'content', 'attachments', pre=True, always=True)
     def set_empty_string_for_none(cls, v):
         return v or ""
 
@@ -72,7 +73,7 @@ class EmailSearchResult(EmailInDBBase):
     def transform_lists_fields_to_list_type(self):
         self.recipients = self.recipients.split(",")
         self.attachments = self.attachments.split(",")
-        self.SPF_IPs = self.SPF_IPs.split(",")
+        #self.SPF_IPs = self.SPF_IPs.split(",")
     
     def transform_analyses(self, analyses: List[Dict]) -> Dict[str, str]:
         transformed_analyses = {}

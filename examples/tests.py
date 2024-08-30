@@ -185,13 +185,22 @@ def initial_setup():
     create_modules_enum(headers) # Creates 3 modules
     
     # create emails for example
+    # emails = [
+    #     ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", [(1,1), (2,1),(3,1), (4,1), (5,1), (6,1)]),
+    #     ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", [(1,2),(2,2),(3,2), (4,2), (5,2), (6,2)]),
+    #     ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,3),(2,2),(3,3), (4,2), (5,3), (6,3)]),
+    #     ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,2),(2,1),(3,2), (4,1), (5,2), (6,1)]),
+    #     ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,1),(3,1), (4,1), (5,1), (6,2)]),
+    #     ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,3),(3,1), (4,1), (5,1), (6,1)]),
+    # ]
+
     emails = [
-        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", "SPF_IP1", "SPF_status1", [(1,1), (2,1),(3,1), (4,1), (5,1), (6,1)]),
-        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", "SPF_IP1, SPF_IP2", "SPF_status1", [(1,2),(2,2),(3,2), (4,2), (5,2), (6,2)]),
-        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,3),(2,2),(3,3), (4,2), (5,3), (6,3)]),
-        ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", "SPF_IP1, SPF_IP2, SPF_IP3, SPF_IP4", "SPF_status2", [(1,2),(2,1),(3,2), (4,1), (5,2), (6,1)]),
-        ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,1),(3,1), (4,1), (5,1), (6,2)]),
-        ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", "SPF_IP1", "SPF_status1", [(1,1),(2,3),(3,1), (4,1), (5,1), (6,1)]),
+        ("user1@corp.com", "user2@corp.com", datetime.now().isoformat(), "Test Subject 1", "Test Content 1", "link1.com", [(1,1), (2,1),(3,1), (4,1), (5,1), (6,1)]),
+        ("user1@corp.com", "user2@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 2", "Test Content 2", "link1.com, link2.com", [(1,2),(2,2),(3,2), (4,2), (5,2), (6,2)]),
+        ("user2@corp.com", "user1@corp.com, user3@corp.com", datetime.now().isoformat(), "Test Subject 3", "Test Content 3", "link2.com", [(1,3),(2,2),(3,3), (4,2), (5,3), (6,3)]),
+        ("user2@corp.com", "user4@corp.com, user5@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 4", "Test Content 4", "link2.com", [(1,2),(2,1),(3,2), (4,1), (5,2), (6,1)]),
+        ("user1@corp.com", "user2@corp.com", "2023-05-27 18:07:28.155490", "Test Subject 5", "Test Content 5", "link1.com", [(1,1),(2,1),(3,1), (4,1), (5,1), (6,2)]),
+        ("user5@corp.com", "user2@corp.com", "2023-09-01 15:07:28.155490", "Test Subject 6", "Test Content 6", "link1.com", [(1,1),(2,3),(3,1), (4,1), (5,1), (6,1)]),
     ]
 
     # get all vericts
@@ -216,8 +225,10 @@ def initial_setup():
     # create emails
     print("Creating emails...")
     try:
-        for sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status, analysis_pairs in emails:
-            email_response = create_email(headers, sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status)
+        #for sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status, analysis_pairs in emails:
+        for sender, recipients, email_datetime, subject, content, attachments, analysis_pairs in emails:
+            #email_response = create_email(headers, sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status)
+            email_response = create_email(headers, sender, recipients, email_datetime, subject, content, attachments)
             print("Create Email Response:", email_response)
             if email_response.get("id"):
                 print("[V] Email created successfully")
@@ -325,7 +336,8 @@ def test_get_all_group_by_search_emails():
 
 def create_fields_enum_test():
     headers = test_login(DETECTION_SERVER_USER_NAME, DETECTION_SERVER_USER_PASSWORD)
-    fields = ["domain", "subject", "SPF_IP", "country"]
+    #fields = ["domain", "subject", "SPF_IP", "country"]
+    fields = ["domain", "subject", "country"]
     for name in fields:
         fields_response = create_fields_enum(headers, name)
         print("Create Fields Response:", fields_response)
@@ -373,14 +385,14 @@ def create_blacklist_items_test():
     else:
         print("[X] 1st Failed to create blacklist")
 
-    blacklist = create_blacklist(headers, fields[2]['id'], "SPF_IP1")
+    blacklist = create_blacklist(headers, fields[2]['id'], "Israel")
     print("Create 3rd Blacklist Response:", blacklist)
     if blacklist.get("id"):
         print("[V] 3rd Blacklist created successfully")
     else:
         print("[X] 3rd Failed to create blacklist")
     
-    blacklist = create_blacklist(headers, fields[2]['id'], "SPF_IP2")
+    blacklist = create_blacklist(headers, fields[2]['id'], "USA")
     print("Create 4th Blacklist Response:", blacklist)
     if blacklist.get("id"):
         print("[V] 4th Blacklist created successfully")

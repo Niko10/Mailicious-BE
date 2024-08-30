@@ -111,8 +111,8 @@ def search_emails_by_text(db: Session, text: str):
             Email.content.ilike(f"%{text}%"),
             Email.subject.ilike(f"%{text}%"),
             Email.attachments.ilike(f"%{text}%"),
-            Email.SPF_IPs.ilike(f"%{text}%"),
-            Email.SPF_status.ilike(f"%{text}%")
+            #Email.SPF_IPs.ilike(f"%{text}%"),
+            #Email.SPF_status.ilike(f"%{text}%")
         )
     )
     

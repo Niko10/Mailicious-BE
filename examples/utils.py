@@ -35,7 +35,8 @@ def login(email, password):
         print(f"Login failed: {response.json()}")
         return None
 
-def create_email(headers, sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status):
+#def create_email(headers, sender, recipients, email_datetime, subject, content, attachments, SPF_IPs, SPF_status):
+def create_email(headers, sender, recipients, email_datetime, subject, content, attachments):
     url = f"{BASE_URL}/emails/"
     payload = {
         "sender": sender,
@@ -44,8 +45,8 @@ def create_email(headers, sender, recipients, email_datetime, subject, content, 
         "subject": subject,
         "content": content,
         "attachments": attachments,
-        "SPF_IPs": SPF_IPs,
-        "SPF_status": SPF_status
+        #"SPF_IPs": SPF_IPs,
+        #"SPF_status": SPF_status
     }
     response = requests.post(url, json=payload, headers=headers)
     return response.json()
