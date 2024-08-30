@@ -259,16 +259,16 @@ def advanced_search_test():
 
     # perform advanced search
     search_response = test_search_emails_advanced(headers,
-                                                  block = 0,
-                                                  alert= 0,
+                                                #   block = 0,
+                                                #   alert= 0,
                                                   #id=[1,2],
                                                    #sender=["user1", "ori"],
                                                    #recipients=["test", "user2@"],
-                                                   #text="Test",
+                                                   text="Suspicio",
                                                    #sender=["user2@"]
-                                                   from_time="2022-07-26T19:00",
-                                                   to_time="2023-10-03T19:00",
-                                                   final_verdict = ["Suspicious"]
+                                                #    from_time="2022-07-26T19:00",
+                                                #    to_time="2023-10-03T19:00",
+                                                   #final_verdict = ["Suspicious", "Malicious"]
     )
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 

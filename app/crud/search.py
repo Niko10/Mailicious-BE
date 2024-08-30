@@ -6,6 +6,11 @@ from app.schemas.search import GroupBySearch, IntegratedEmailSearchParams
 from app.schemas.widget import WidgetFull, WidgetCreate, WidgetUpdate
 from app.models.widget import Widget
 import json
+from sqlalchemy.orm import aliased
+from app.models.enum_modules import EnumModules
+from app.models.enum_verdicts import EnumVerdicts
+from sqlalchemy.orm import aliased
+
 
 DEBUG_MSG_PREFIX = "./app/crud/search.py -"
 
@@ -54,6 +59,31 @@ def search_emails(db: Session, params: dict):
     if params.get("id"):
         ids = params["id"]
         query = query.filter(Email.id.in_(ids))
+    
+    if params.get("final_verdict"):
+        final_verdicts = params["final_verdict"]
+        final_verdict_conditions = []
+
+        print(f"[DEBUG] {debug_msg_current} Final Verdicts: ", final_verdicts)
+
+        # Aliasing the EnumModules and EnumVerdicts tables for clarity in the join
+        EnumModulesAlias = aliased(EnumModules)
+        EnumVerdictsAlias = aliased(EnumVerdicts)
+
+        # Join Email -> Analysis -> EnumModules and EnumVerdicts
+        query = query.join(Analysis, Email.analyses).join(EnumModulesAlias, Analysis.analysis).join(EnumVerdictsAlias, Analysis.verdict)
+
+        # Create a condition for each string in the final_verdicts list
+        for verdict in final_verdicts:
+            verdict_condition = EnumVerdictsAlias.name.ilike(f"%{verdict.strip()}%")
+            final_verdict_conditions.append(verdict_condition)
+
+        # Filter where EnumModules name is "Final Verdict" and one of the final_verdicts matches
+        query = query.filter(
+            EnumModulesAlias.name == "Final Verdict",
+            or_(*final_verdict_conditions)
+        )
+
 
     print(f"[DEBUG] {debug_msg_current} Final Query: ", str(query))
     return query.order_by(Email.email_datetime.desc()).all()
@@ -71,8 +101,10 @@ def search_by_verdict(db: Session, verdict_id: int, analysis_id: int):
 
 def search_emails_by_text(db: Session, text: str):
     debug_msg_current = f"{DEBUG_MSG_PREFIX} search_emails_by_text"
-    print(f"[DEBUG] {debug_msg_current} - Text:", text)
-    query = db.query(Email).filter(
+    print(f"---------1) [DEBUG] {debug_msg_current} - Text:", text)
+    
+    # Basic text search on Email fields
+    basic_query = db.query(Email).filter(
         or_(
             Email.sender.ilike(f"%{text}%"),
             Email.recipients.ilike(f"%{text}%"),
@@ -83,9 +115,26 @@ def search_emails_by_text(db: Session, text: str):
             Email.SPF_status.ilike(f"%{text}%")
         )
     )
+    
+    # Alias the EnumModules and EnumVerdicts tables for clarity in the join
+    EnumModulesAlias = aliased(EnumModules)
+    EnumVerdictsAlias = aliased(EnumVerdicts)
 
-    print(f"[DEBUG] {debug_msg_current} search_emails_by_text - Query: ", str(query))
-    return query.order_by(Email.email_datetime.desc()).all()
+    # Search for "Final Verdict" in EnumVerdicts
+    final_verdict_query = db.query(Email).join(Analysis, Email.analyses).join(EnumModulesAlias, Analysis.analysis).join(EnumVerdictsAlias, Analysis.verdict).filter(
+        EnumModulesAlias.name == "Final Verdict",
+        EnumVerdictsAlias.name.ilike(f"%{text}%")
+    )
+    
+    # Combine the two queries using union
+    combined_query = basic_query.union(final_verdict_query).order_by(Email.email_datetime.desc())
+
+    print(f"[DEBUG] {debug_msg_current} search_emails_by_text - Query: ", str(combined_query))
+    
+    results = combined_query.all()
+    print(f"---------2) [DEBUG] {debug_msg_current} search_emails_by_text - Results: ", results)
+    
+    return results
 
 
 def delete_group_by_search_emails(db: Session, id: int):
