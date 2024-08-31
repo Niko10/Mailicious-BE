@@ -10,6 +10,7 @@ from sqlalchemy.orm import aliased
 from app.models.enum_modules import EnumModules
 from app.models.enum_verdicts import EnumVerdicts
 from sqlalchemy.orm import aliased
+from datetime import datetime
 
 
 DEBUG_MSG_PREFIX = "./app/crud/search.py -"
@@ -170,6 +171,14 @@ def get_all_group_by_search_emails(db: Session, user_id: int):
 def create_group_by_search_emails(db: Session, params: dict, user_id: int):
     # save the params to the widgets table
     print(f"[DEBUG] {DEBUG_MSG_PREFIX} create_group_by_search_emails - user_id: ", user_id, " Params:\n", params)
+    old_from_time, old_to_time = None, None
+    if 'from_time' in params and isinstance(params['from_time'], datetime):
+        old_from_time = params['from_time']
+        params['from_time'] = params['from_time'].isoformat()
+    if 'to_time' in params and isinstance(params['from_time'], datetime):
+        old_to_time = params['to_time']
+        params['from_time'] = params['from_time'].isoformat()
+    
     new_widget = Widget(
         user_id=user_id,
         config=json.dumps(params),
@@ -177,6 +186,11 @@ def create_group_by_search_emails(db: Session, params: dict, user_id: int):
         type=params["type"]
     )
     
+    if old_from_time:
+        params['from_time'] = old_from_time
+    if old_to_time:
+        params['to_time'] = old_to_time
+
     db.add(new_widget)
     db.commit()
     db.refresh(new_widget)
@@ -249,6 +263,11 @@ def group_by_search_emails(db: Session, params: dict):
     
     if params.get("alert"):
         query = query.filter(Email.alert == params["alert"])
+    
+    if params.get("id"):
+        # id is a list of ids to filter on
+        ids = params["id"]
+        query = query.filter(Email.id.in_(ids))
 
     print(f"[DEBUG] {debug_msg_current} - Query after adding WHERE: ", str(query))
 
