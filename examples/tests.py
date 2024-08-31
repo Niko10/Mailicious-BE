@@ -540,7 +540,7 @@ def create_and_update_and_get_bulk_actions_test():
         },
         {
             "verdict_id": 3,
-            "module_id": 6,
+            "module_id": 5,
             "block": False,
             "alert": True
         },
