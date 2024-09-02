@@ -175,9 +175,9 @@ def create_group_by_search_emails(db: Session, params: dict, user_id: int):
     if 'from_time' in params and isinstance(params['from_time'], datetime):
         old_from_time = params['from_time']
         params['from_time'] = params['from_time'].isoformat()
-    if 'to_time' in params and isinstance(params['from_time'], datetime):
+    if 'to_time' in params and isinstance(params['to_time'], datetime):
         old_to_time = params['to_time']
-        params['from_time'] = params['from_time'].isoformat()
+        params['to_time'] = params['to_time'].isoformat()
     
     new_widget = Widget(
         user_id=user_id,

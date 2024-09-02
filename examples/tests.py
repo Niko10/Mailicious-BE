@@ -300,7 +300,7 @@ def test_group_by_search_test():
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
     print("Group by sender...")
-    group_by_fields = {"group_by_fields": "sender", "name": "Group by sender", "type": "pie", "from_time": "2024-08-30T00:00", "id":[1]}
+    group_by_fields = {"group_by_fields": "sender", "name": "Group by sender", "type": "pie", "from_time": "2024-08-30T00:00", "to_time": "2024-10-30T00:00", "id":[1]}
     search_response = group_by_search_emails(headers, group_by_fields)
     print("[DEBUG] Search Response 1:\n", json.dumps(search_response, indent=4))
 
